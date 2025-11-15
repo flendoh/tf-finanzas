@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_scenario_simulation_list" model="ir.ui.view">
+        <field name="name">fondo_mi_vivienda.scenario_simulation.list</field>
+        <field name="model">fondo_mi_vivienda.scenario_simulation</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="active"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_scenario_simulation_form" model="ir.ui.view">
+        <field name="name">fondo_mi_vivienda.scenario_simulation.form</field>
+        <field name="model">fondo_mi_vivienda.scenario_simulation</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_calculate_schedule" 
+                                string="Calcular Cronograma" 
+                                type="object" 
+                                class="btn-primary"
+                    />
+                    <button name="action_export_pdf" 
+                                string="Exportar a PDF" 
+                                type="object" 
+                                class="btn-secondary"
+                    />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre de la Simulación de Escenario..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Información General">
+                            <field name="partner_id"/>
+                            <field name="project_id"/>
+                            <field name="financial_product_id"/>
+                            <field name="currency_id" invisible="not financial_product_id"/>
+                        </group>
+                        <group string="Información Cliente" invisible="not partner_id">
+                            <field name="apply_to_bbp_integrator"/>
+                            <field name="has_received_housing_support_before"/>
+                        </group>
+                    </group>
+                    <group string="Datos Financieros" invisible="not financial_product_id">
+                        <group>
+                            <field name="property_value"/>
+                            <field name="down_payment"/>
+                            <field name="tea" widget="percentage"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Cronograma de Pagos">
+                            <field name="fee_schedule_line_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_scenario_simulation_search" model="ir.ui.view">
+        <field name="name">fondo_mi_vivienda.scenario_simulation.search</field>
+        <field name="model">fondo_mi_vivienda.scenario_simulation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_scenario_simulation" model="ir.actions.act_window">
+        <field name="name">Simulaciones de Escenario</field>
+        <field name="res_model">fondo_mi_vivienda.scenario_simulation</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_scenario_simulation_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea una nueva simulación de escenario
+            </p>
+        </field>
+    </record>
+</odoo>

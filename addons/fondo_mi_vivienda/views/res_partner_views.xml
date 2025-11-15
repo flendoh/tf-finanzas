@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vista heredada del formulario de contacto -->
+        <record id="view_partner_form_fondo_mi_vivienda" model="ir.ui.view">
+            <field name="name">res.partner.form.lodgify</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <!--<xpath expr="//div[@name='button_box']" position="inside">
+                    <button class="oe_stat_button" type="object" name="action_view_lodgify_bookings" icon="fa-bed">
+                        <field string="Reservas" name="lodgify_booking_count" widget="statinfo"/>
+                    </button>
+                </xpath>-->
+                <notebook>
+                    <page string="Fondo Mi Vivienda">
+                        <group string="Información">
+                            <field name="apply_to_bbp_integrator" />
+                            <field name="has_received_housing_support_before" />
+                        </group>
+                        <group string="Datos Financieros">
+                            <field name="currency_id" />
+                            <field name="financial_income"/>
+                            <field name="financial_expenses" />
+                            <field name="financial_debts" />
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+    </data>
+</odoo>

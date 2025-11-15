@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fee_schedule_line_list" model="ir.ui.view">
+        <field name="name">fondo_mi_vivienda.fee_schedule_line.list</field>
+        <field name="model">fondo_mi_vivienda.fee_schedule_line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="name"/>
+                <field name="initial_balance"/>
+                <field name="amortization"/>
+                <field name="debt_relief_insurance"/>
+                <field name="property_insurance"/>
+                <field name="final_balance"/>
+                <field name="monthly_payment"/>
+                <field name="currency_id" optional="1"/>
+            </list>
+        </field>
+    </record>
+</odoo>

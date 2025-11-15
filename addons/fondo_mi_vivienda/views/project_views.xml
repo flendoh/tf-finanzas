@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_project_list" model="ir.ui.view">
+        <field name="name">fondo_mi_vivienda.project.list</field>
+        <field name="model">fondo_mi_vivienda.project</field>
+        <field name="arch" type="xml">
+            <list string="Proyectos">
+                <field name="name"/>
+                <field name="property_type"/>
+                <field name="is_property_sustainable"/>
+                <field name="state"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_project_form" model="ir.ui.view">
+        <field name="name">fondo_mi_vivienda.project.form</field>
+        <field name="model">fondo_mi_vivienda.project</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre del Proyecto..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Información General">
+                            <field name="property_type"/>
+                            <field name="is_property_sustainable"/>
+                            <field name="currency_id"/>
+                            <field name="property_value"/>
+                        </group>
+                        <group string="Ubicación">
+                            <field name="street"/>
+                            <field name="department"/>
+                            <field name="city"/>
+                        </group>
+                    </group>
+                    <group string="Estado del Proyecto">
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_project_search" model="ir.ui.view">
+        <field name="name">fondo_mi_vivienda.project.search</field>
+        <field name="model">fondo_mi_vivienda.project</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Proyectos">
+                <field name="name"/>
+                <field name="property_type"/>
+                <field name="city"/>
+                <filter string="Activos" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactivos" name="inactive" domain="[('active', '=', False)]"/>
+                <filter string="Borrador" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Abierto" name="open" domain="[('state', '=', 'open')]"/>
+                <filter string="Cerrado" name="close" domain="[('state', '=', 'close')]"/>
+                <group string="Agrupar por">
+                    <filter string="Tipo de Propiedad" name="group_property_type" context="{'group_by': 'property_type'}"/>
+                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Ciudad" name="group_city" context="{'group_by': 'city'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_project" model="ir.actions.act_window">
+        <field name="name">Proyectos</field>
+        <field name="res_model">fondo_mi_vivienda.project</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_project_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea un nuevo proyecto de vivienda
+            </p>
+        </field>
+    </record>
+</odoo>

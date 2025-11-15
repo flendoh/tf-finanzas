@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu Root -->
+    <menuitem id="menu_fondo_mi_vivienda_root"
+              name="Fondo MiVivienda"
+              sequence="0"/>
+
+    <!-- Menu Project -->
+    <menuitem id="menu_project"
+              name="Proyectos"
+              parent="menu_fondo_mi_vivienda_root"
+              action="action_project"
+              sequence="10"/>
+
+    <!-- Menu Scenario Simulation -->
+    <menuitem id="menu_scenario_simulation"
+              name="Simulaciones de Escenario"
+              parent="menu_fondo_mi_vivienda_root"
+              action="action_scenario_simulation"
+              sequence="5"/>
+
+    <!-- Menu Financial Product -->
+    <menuitem id="menu_financial_product"
+              name="Productos Financieros"
+              parent="menu_fondo_mi_vivienda_root"
+              action="action_financial_product"
+              sequence="40"/>
+</odoo>
