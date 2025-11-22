@@ -53,6 +53,7 @@
                         <group>
                             <field name="valor_vivienda"/>
                             <field name="cuota_inicial"/>
+                            <field name="porcentaje_de_cuota_inicial" widget="percentage"/>
                             <field name="monto_a_financiar" />
                         </group>
                         <group>

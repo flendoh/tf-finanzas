@@ -28,7 +28,7 @@ class ScenarioSimulation(models.Model):
 
     proyecto_id = fields.Many2one(
         comodel_name="fondo_mi_vivienda.project",
-        string="Proyecto Vivienda",
+        string="Proyecto Inmobiliario",
         required=True
     )
 
@@ -45,7 +45,7 @@ class ScenarioSimulation(models.Model):
 
     producto_financiero_id = fields.Many2one(
         comodel_name="fondo_mi_vivienda.financial_product",
-        string="Producto Financiero",
+        string="Entidad Financiera",
         required=True
     )
 
@@ -101,7 +101,18 @@ class ScenarioSimulation(models.Model):
         store=True,
     )
 
+    porcentaje_de_cuota_inicial = fields.Float(
+        string="Porcentaje de Cuota Inicial",
+        compute="_calcular_porcentaje_de_cuota_inicial",
+        store=True,
+    )
+
     active = fields.Boolean(string='Activo', default=True)
+
+    @api.depends('cuota_inicial', 'valor_vivienda')
+    def _calcular_porcentaje_de_cuota_inicial(self):
+        for r in self:
+            r.porcentaje_de_cuota_inicial = r.cuota_inicial / r.valor_vivienda
 
     @api.depends('valor_vivienda', 'cuota_inicial')
     def _calcular_monto_a_financiar(self):
