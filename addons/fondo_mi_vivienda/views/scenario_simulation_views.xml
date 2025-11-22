@@ -42,6 +42,7 @@
                             <field name="project_id"/>
                             <field name="financial_product_id"/>
                             <field name="currency_id" invisible="not financial_product_id"/>
+                            <field name="monthly_term"/>
                         </group>
                         <group string="Información Cliente" invisible="not partner_id">
                             <field name="apply_to_bbp_integrator"/>

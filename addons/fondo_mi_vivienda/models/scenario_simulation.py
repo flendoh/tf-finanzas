@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class ScenarioSimulation(models.Model):
@@ -74,7 +75,20 @@ class ScenarioSimulation(models.Model):
         string="Cronograma de Cuotas",
     )
 
+    monthly_term = fields.Integer(
+        string="Plazo (meses)",
+        required=True,
+    )
+
     active = fields.Boolean(string='Activo', default=True)
+
+    @api.constrains('monthly_term')
+    def _check_monthly_term(self):
+        for record in self:
+            MIN_MONTHLY_TERM = 60
+            MAX_MONTHLY_TERM = 300
+            if record.monthly_term < MIN_MONTHLY_TERM or record.monthly_term > MAX_MONTHLY_TERM:
+                raise ValidationError(f"El plazo debe ser como mínimo {MIN_MONTHLY_TERM} meses y como máximo {MAX_MONTHLY_TERM} meses.")
 
     def action_calculate_schedule(self):
         return True
