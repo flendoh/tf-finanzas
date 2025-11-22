@@ -5,13 +5,14 @@
         <field name="model">fondo_mi_vivienda.fee_schedule_line</field>
         <field name="arch" type="xml">
             <list editable="bottom">
-                <field name="name"/>
+                <field name="periodo"/>
                 <field name="saldo_inicial"/>
                 <field name="amortizacion"/>
+                <field name="intereses"/>
                 <field name="seguro_desgravamen"/>
                 <field name="seguro_inmueble"/>
                 <field name="saldo_final"/>
-                <field name="pago_mensual"/>
+                <field name="cuota_mensual"/>
                 <field name="moneda_id" optional="1"/>
             </list>
         </field>

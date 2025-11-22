@@ -54,6 +54,8 @@
                             <field name="valor_vivienda"/>
                             <field name="cuota_inicial"/>
                             <field name="tea" widget="percentage"/>
+                            <field name="tem" widget="percentage"/>
+                            <field name="cuota_mensual"/>
                         </group>
                     </group>
                     <notebook>

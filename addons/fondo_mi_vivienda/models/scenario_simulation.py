@@ -1,5 +1,8 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class ScenarioSimulation(models.Model):
@@ -56,6 +59,11 @@ class ScenarioSimulation(models.Model):
         related="producto_financiero_id.tea",
     )
 
+    tem = fields.Float(
+        string="TEM",
+        related="producto_financiero_id.tem",
+    )
+
     valor_vivienda = fields.Monetary(
         string="Valor de la Vivienda",
         currency_field="moneda_id",
@@ -80,6 +88,13 @@ class ScenarioSimulation(models.Model):
         required=True,
     )
 
+    cuota_mensual = fields.Monetary(
+        string="Cuota Mensual",
+        currency_field="moneda_id",
+        compute="_calcular_cuota_mensual",
+        store=True,
+    )
+
     active = fields.Boolean(string='Activo', default=True)
 
     @api.constrains('plazo_meses')
@@ -91,7 +106,49 @@ class ScenarioSimulation(models.Model):
                 raise ValidationError(f"El plazo debe ser como mínimo {MIN_PLAZO_MESES} meses y como máximo {MAX_PLAZO_MESES} meses.")
 
     def action_calculate_schedule(self):
-        return True
+        self.ensure_one()
+        self.lineas_cronograma_cuota_ids.unlink()
+
+        anterior = None
+
+        for mes in range(0, self.plazo_meses + 1):
+            
+            if anterior:
+                cuota_mensual = self.cuota_mensual
+                intereses = anterior.saldo_final * self.tem
+                amortizacion = cuota_mensual - intereses
+                saldo_final = anterior.saldo_final - anterior.amortizacion
+            else:
+                saldo_final = self.valor_vivienda
+                cuota_mensual = 0
+                intereses = 0
+                amortizacion = 0
+            
+            anterior = self.lineas_cronograma_cuota_ids.create({
+                'periodo': mes,
+                'simulacion_escenario_id': self.id,
+                'cuota_mensual': cuota_mensual,
+                'saldo_final': saldo_final,
+                'amortizacion': amortizacion,
+                'intereses': intereses,
+            })
     
     def action_export_pdf(self):
         return True
+    
+    @api.depends('valor_vivienda', 'tem', 'plazo_meses')
+    def _calcular_cuota_mensual(self):
+        for r in self:
+            numerador = r.tem * (1 + r.tem)**r.plazo_meses
+            denominador = (1 + r.tem)**r.plazo_meses - 1
+            
+            
+            if denominador == 0:
+                continue
+            
+            cuota_mensual = r.valor_vivienda * (numerador / denominador)
+            
+            
+            r.write({
+                'cuota_mensual': cuota_mensual
+            })
