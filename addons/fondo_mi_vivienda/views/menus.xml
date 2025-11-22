@@ -7,7 +7,7 @@
 
     <!-- Menu Project -->
     <menuitem id="menu_project"
-              name="Proyectos"
+              name="Proyectos Inmobiliarios"
               parent="menu_fondo_mi_vivienda_root"
               action="action_project"
               sequence="10"/>
@@ -21,7 +21,7 @@
 
     <!-- Menu Financial Product -->
     <menuitem id="menu_financial_product"
-              name="Productos Financieros"
+              name="Entidades Financieras"
               parent="menu_fondo_mi_vivienda_root"
               action="action_financial_product"
               sequence="40"/>

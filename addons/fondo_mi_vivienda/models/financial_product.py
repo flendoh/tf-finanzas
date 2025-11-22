@@ -75,7 +75,7 @@ class FinancialProduct(models.Model):
     @api.depends('tea')
     def _compute_tem(self):
         for record in self:
-            record.tem = record.tea / 12
+            record.tem = self._e_rate_to_effective_rate(record.tea, 360, 30)
     
     def _e_rate_to_effective_rate(self, e_rate, e_period, effective_period):
         """

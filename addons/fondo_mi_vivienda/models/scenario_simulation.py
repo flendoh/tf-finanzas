@@ -129,14 +129,14 @@ class ScenarioSimulation(models.Model):
         for mes in range(1, self.plazo_meses + 1):
             if anterior:
                 saldo_inicial = anterior.saldo_final
-                intereses = anterior.saldo_final * tem
+                intereses = saldo_inicial * tem
                 amortizacion = cuota_mensual - intereses
-                saldo_final = anterior.saldo_final - amortizacion
+                saldo_final = saldo_inicial - amortizacion
             else:
                 saldo_inicial = valor_total
-                intereses = valor_total * tem
+                intereses = saldo_inicial * tem
                 amortizacion = cuota_mensual - intereses
-                saldo_final = valor_total - amortizacion
+                saldo_final = saldo_inicial - amortizacion
             
             anterior = self.lineas_cronograma_cuota_ids.create({
                 'saldo_inicial': saldo_inicial,
