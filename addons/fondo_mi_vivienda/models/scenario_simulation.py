@@ -88,14 +88,25 @@ class ScenarioSimulation(models.Model):
         required=True,
     )
 
-    cuota_mensual = fields.Monetary(
+    cuota_mensual = fields.Float(
         string="Cuota Mensual",
-        currency_field="moneda_id",
         compute="_calcular_cuota_mensual",
         store=True,
     )
 
+    monto_a_financiar = fields.Monetary(
+        string="Monto a Financiar",
+        currency_field="moneda_id",
+        compute="_calcular_monto_a_financiar",
+        store=True,
+    )
+
     active = fields.Boolean(string='Activo', default=True)
+
+    @api.depends('valor_vivienda', 'cuota_inicial')
+    def _calcular_monto_a_financiar(self):
+        for r in self:
+            r.monto_a_financiar = r.valor_vivienda - r.cuota_inicial
 
     @api.constrains('plazo_meses')
     def _check_plazo_meses(self):
@@ -111,20 +122,24 @@ class ScenarioSimulation(models.Model):
 
         anterior = None
 
-        for mes in range(0, self.plazo_meses + 1):
-            
+        cuota_mensual = self.cuota_mensual
+        tem = self.tem
+        valor_total = self.monto_a_financiar
+
+        for mes in range(1, self.plazo_meses + 1):
             if anterior:
-                cuota_mensual = self.cuota_mensual
-                intereses = anterior.saldo_final * self.tem
+                saldo_inicial = anterior.saldo_final
+                intereses = anterior.saldo_final * tem
                 amortizacion = cuota_mensual - intereses
-                saldo_final = anterior.saldo_final - anterior.amortizacion
+                saldo_final = anterior.saldo_final - amortizacion
             else:
-                saldo_final = self.valor_vivienda
-                cuota_mensual = 0
-                intereses = 0
-                amortizacion = 0
+                saldo_inicial = valor_total
+                intereses = valor_total * tem
+                amortizacion = cuota_mensual - intereses
+                saldo_final = valor_total - amortizacion
             
             anterior = self.lineas_cronograma_cuota_ids.create({
+                'saldo_inicial': saldo_inicial,
                 'periodo': mes,
                 'simulacion_escenario_id': self.id,
                 'cuota_mensual': cuota_mensual,
@@ -136,18 +151,16 @@ class ScenarioSimulation(models.Model):
     def action_export_pdf(self):
         return True
     
-    @api.depends('valor_vivienda', 'tem', 'plazo_meses')
+    @api.depends('monto_a_financiar', 'tem', 'plazo_meses')
     def _calcular_cuota_mensual(self):
         for r in self:
             numerador = r.tem * (1 + r.tem)**r.plazo_meses
             denominador = (1 + r.tem)**r.plazo_meses - 1
             
-            
             if denominador == 0:
                 continue
             
-            cuota_mensual = r.valor_vivienda * (numerador / denominador)
-            
+            cuota_mensual = r.monto_a_financiar * (numerador / denominador)
             
             r.write({
                 'cuota_mensual': cuota_mensual

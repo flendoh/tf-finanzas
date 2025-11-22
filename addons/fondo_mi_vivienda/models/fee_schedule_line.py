@@ -19,37 +19,30 @@ class FeeScheduleLine(models.Model):
         related="simulacion_escenario_id.moneda_id"
     )
 
-    saldo_inicial = fields.Monetary(
+    saldo_inicial = fields.Float(
         string="Saldo Inicial",
-        currency_field="moneda_id",
     )
 
-    amortizacion = fields.Monetary(
+    amortizacion = fields.Float(
         string="Amortización",
-        currency_field="moneda_id",
     )
 
-    intereses = fields.Monetary(
+    intereses = fields.Float(
         string="Intereses",
-        currency_field="moneda_id",
     )
 
-    seguro_desgravamen = fields.Monetary(
+    seguro_desgravamen = fields.Float(
         string="Seguro Desgravamen",
-        currency_field="moneda_id",
     )
 
-    seguro_inmueble = fields.Monetary(
+    seguro_inmueble = fields.Float(
         string="Seguro de Inmueble",
-        currency_field="moneda_id",
     )
 
-    saldo_final = fields.Monetary(
+    saldo_final = fields.Float(
         string="Saldo Final",
-        currency_field="moneda_id",
     )
 
-    cuota_mensual = fields.Monetary(
+    cuota_mensual = fields.Float(
         string="Cuota Mensual",
-        currency_field="moneda_id",
     )

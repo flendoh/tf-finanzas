@@ -6,13 +6,13 @@
         <field name="arch" type="xml">
             <list editable="bottom">
                 <field name="periodo"/>
-                <field name="saldo_inicial"/>
-                <field name="amortizacion"/>
-                <field name="intereses"/>
-                <field name="seguro_desgravamen"/>
-                <field name="seguro_inmueble"/>
-                <field name="saldo_final"/>
-                <field name="cuota_mensual"/>
+                <field name="saldo_inicial" widget="monetary" options="{'currency_field': 'moneda_id'}"/>
+                <field name="amortizacion" widget="monetary" options="{'currency_field': 'moneda_id'}"/>
+                <field name="intereses" widget="monetary" options="{'currency_field': 'moneda_id'}"/>
+                <field name="seguro_desgravamen" widget="monetary" options="{'currency_field': 'moneda_id'}"/>
+                <field name="seguro_inmueble" widget="monetary" options="{'currency_field': 'moneda_id'}"/>
+                <field name="saldo_final" widget="monetary" options="{'currency_field': 'moneda_id'}"/>
+                <field name="cuota_mensual" widget="monetary" options="{'currency_field': 'moneda_id'}"/>
                 <field name="moneda_id" optional="1"/>
             </list>
         </field>

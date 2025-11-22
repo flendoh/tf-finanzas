@@ -53,9 +53,12 @@
                         <group>
                             <field name="valor_vivienda"/>
                             <field name="cuota_inicial"/>
+                            <field name="monto_a_financiar" />
+                        </group>
+                        <group>
                             <field name="tea" widget="percentage"/>
                             <field name="tem" widget="percentage"/>
-                            <field name="cuota_mensual"/>
+                            <field name="cuota_mensual" widget="monetary" options="{'currency_field': 'moneda_id'}"/>
                         </group>
                     </group>
                     <notebook>
