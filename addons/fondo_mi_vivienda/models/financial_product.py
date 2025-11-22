@@ -46,6 +46,7 @@ class FinancialProduct(models.Model):
     rate_value = fields.Float(string='Valor de la Tasa (%)')
 
     tea = fields.Float(string='Tasa Efectiva Anual (%)', compute='_compute_tea', store=True, readonly=True)
+    tem = fields.Float(string='Tasa Efectiva Mensual (%)', compute='_compute_tem', store=True, readonly=True)
 
     active = fields.Boolean(string='Active', default=True)
 
@@ -66,10 +67,15 @@ class FinancialProduct(models.Model):
                 tea = self._e_rate_to_effective_rate(record.rate_value, e_period, 360)
 
             record.tea = tea
-
+    
+    @api.depends('tea')
+    def _compute_tem(self):
+        for record in self:
+            record.tem = self._e_rate_to_effective_rate(record.tea, 360, 30)
+    
     def _e_rate_to_effective_rate(self, e_rate, e_period, effective_period):
         """
-        Convierte una tasa efectiva a una tasa efectiva anual.
+        Convierte una tasa efectiva a una tasa efectiva.
 
         :param e_rate: Tasa efectiva.
         :param e_period: Período de la tasa efectiva.
@@ -80,7 +86,7 @@ class FinancialProduct(models.Model):
     
     def _n_rate_to_effective_rate(self, n_rate, n_period, n_cap_period, effective_period):
         """
-        Convierte una tasa nominal a una tasa efectiva anual.
+        Convierte una tasa nominal a una tasa efectiva.
 
         :param n_rate: Tasa nominal.
         :param n_period: Período de la tasa nominal.
