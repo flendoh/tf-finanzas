@@ -107,6 +107,17 @@ class ScenarioSimulation(models.Model):
         store=True,
     )
 
+    #Seguros
+    seguro_desgravamen_mensual = fields.Float(
+        string="Seguro Desgravamen Mensual",
+        related="producto_financiero_id.seguro_desgravamen_mensual",
+    )
+
+    seguro_de_inmueble_anual = fields.Float(
+        string="Seguro de Inmueble Anual",
+        related="producto_financiero_id.seguro_de_inmueble_anual",
+    )
+
     active = fields.Boolean(string='Activo', default=True)
 
     @api.depends('cuota_inicial', 'valor_vivienda')
