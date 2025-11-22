@@ -41,7 +41,7 @@ class FinancialProduct(models.Model):
         ('quarterly', 'Trimestral'),
         ('semi-annual', 'Semestral'),
         ('annual', 'Anual')
-    ], string='Periodo de Tasa')
+    ], string='Periodo de Tasa', default='monthly')
 
     valor_tasa = fields.Float(string='Valor de la Tasa (%)')
 
@@ -54,14 +54,18 @@ class FinancialProduct(models.Model):
     def _compute_tea(self):
         for record in self:
             tea = None
-
             if record.tipo_tasa == 'nominal':
+                if not record.periodo_tasa_nominal or not record.capitalizacion_tasa_nominal:
+                    continue
+
                 nominal_period = PERIOD_DAYS.get(record.periodo_tasa_nominal, 0)
                 nominal_cap_period = PERIOD_DAYS.get(record.capitalizacion_tasa_nominal, 0)
 
                 tea = self._n_rate_to_effective_rate(record.valor_tasa, nominal_period, nominal_cap_period, 360)
 
             elif record.tipo_tasa == 'effective':
+                if not record.periodo_tasa_efectiva:
+                    continue
                 e_period = PERIOD_DAYS.get(record.periodo_tasa_efectiva, 0)
                 
                 tea = self._e_rate_to_effective_rate(record.valor_tasa, e_period, 360)

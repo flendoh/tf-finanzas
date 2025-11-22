@@ -59,8 +59,8 @@
                 <field name="name"/>
                 <field name="tipo_propiedad"/>
                 <field name="ciudad"/>
-                <filter string="Activos" name="active" domain="[('activo', '=', True)]"/>
-                <filter string="Inactivos" name="inactive" domain="[('activo', '=', False)]"/>
+                <filter string="Activos" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactivos" name="inactive" domain="[('active', '=', False)]"/>
                 <filter string="Borrador" name="draft" domain="[('estado', '=', 'borrador')]"/>
                 <filter string="Abierto" name="open" domain="[('estado', '=', 'abierto')]"/>
                 <filter string="Cerrado" name="close" domain="[('estado', '=', 'cerrado')]"/>
