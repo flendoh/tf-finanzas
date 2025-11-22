@@ -8,7 +8,7 @@ class ScenarioSimulation(models.Model):
 
     name = fields.Char(string='Nombre', required=True)
 
-    state = fields.Selection(
+    estado = fields.Selection(
         string="Estado",
         selection=[
             ('draft', 'Borrador'),
@@ -17,78 +17,78 @@ class ScenarioSimulation(models.Model):
         default='draft',
     )
 
-    partner_id = fields.Many2one(
+    cliente_id = fields.Many2one(
         comodel_name="res.partner",
         string="Cliente",
         required=True
     )
 
-    project_id = fields.Many2one(
+    proyecto_id = fields.Many2one(
         comodel_name="fondo_mi_vivienda.project",
         string="Proyecto Vivienda",
         required=True
     )
 
-    apply_to_bbp_integrator = fields.Boolean(
+    aplicar_a_bbp_integrador = fields.Boolean(
         string="¿Aplicar a BBP Integrador?",
         help="(5) Personas vulnerables en los grupos: Personas de menores ingresos, adultos mayores, personas con discapacidad, personas desplazadas, migrantes retornados.",
-        related="partner_id.apply_to_bbp_integrator"
+        related="cliente_id.aplicar_a_bbp_integrador"
     )
 
-    has_received_housing_support_before = fields.Boolean(
+    ha_recibido_apoyo_habitacional_antes = fields.Boolean(
         string="¿Ha recibido apoyo habitacional antes?",
-        related="partner_id.has_received_housing_support_before"
+        related="cliente_id.ha_recibido_apoyo_habitacional_antes"
     )
 
-    financial_product_id = fields.Many2one(
+    producto_financiero_id = fields.Many2one(
         comodel_name="fondo_mi_vivienda.financial_product",
         string="Producto Financiero",
         required=True
     )
 
-    currency_id = fields.Many2one(
-        related="financial_product_id.currency_id",
+    moneda_id = fields.Many2one(
+        related="producto_financiero_id.moneda_id",
         string="Moneda",
     )
 
     tea = fields.Float(
         string="TEA",
-        related="financial_product_id.tea",
+        related="producto_financiero_id.tea",
     )
 
-    property_value = fields.Monetary(
+    valor_vivienda = fields.Monetary(
         string="Valor de la Vivienda",
-        currency_field="currency_id",
+        currency_field="moneda_id",
         required=True,
-        related="project_id.property_value"
+        related="proyecto_id.valor_vivienda"
     )
 
-    down_payment = fields.Monetary(
+    cuota_inicial = fields.Monetary(
         string="Cuota Inicial",
-        currency_field="currency_id",
+        currency_field="moneda_id",
         required=True
     )
 
-    fee_schedule_line_ids = fields.One2many(
+    lineas_cronograma_cuota_ids = fields.One2many(
         comodel_name="fondo_mi_vivienda.fee_schedule_line",
-        inverse_name="scenario_simulation_id",
+        inverse_name="simulacion_escenario_id",
         string="Cronograma de Cuotas",
     )
 
-    monthly_term = fields.Integer(
+    plazo_meses = fields.Integer(
         string="Plazo (meses)",
         required=True,
     )
 
     active = fields.Boolean(string='Activo', default=True)
 
-    @api.constrains('monthly_term')
-    def _check_monthly_term(self):
+    @api.constrains('plazo_meses')
+    def _check_plazo_meses(self):
         for record in self:
-            MIN_MONTHLY_TERM = 60
-            MAX_MONTHLY_TERM = 300
-            if record.monthly_term < MIN_MONTHLY_TERM or record.monthly_term > MAX_MONTHLY_TERM:
-                raise ValidationError(f"El plazo debe ser como mínimo {MIN_MONTHLY_TERM} meses y como máximo {MAX_MONTHLY_TERM} meses.")
+            MIN_PLAZO_MESES = 60
+            MAX_PLAZO_MESES = 300
+            if record.plazo_meses < MIN_PLAZO_MESES or record.plazo_meses > MAX_PLAZO_MESES:
+                raise ValidationError(f"El plazo debe ser como mínimo {MIN_PLAZO_MESES} meses y como máximo {MAX_PLAZO_MESES} meses.")
 
     def action_calculate_schedule(self):
         return True

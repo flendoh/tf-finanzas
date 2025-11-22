@@ -6,9 +6,9 @@
         <field name="arch" type="xml">
             <list string="Productos Financieros">
                 <field name="name"/>
-                <field name="currency_id"/>
-                <field name="rate_type"/>
-                <field name="rate_value" widget="percentage"/>
+                <field name="moneda_id"/>
+                <field name="tipo_tasa"/>
+                <field name="valor_tasa" widget="percentage"/>
                 <field name="tea" widget="percentage"/>
                 <field name="active"/>
             </list>
@@ -28,28 +28,28 @@
                     </div>
                     <group string="Información General">
                         <group>
-                            <field name="currency_id"/>
+                            <field name="moneda_id"/>
                             <field name="active"/>
                         </group>
                     </group>
                     
                     <group>
                         <group string="Configuración de Tasa">
-                            <field name="rate_type"/>
-                            <field name="rate_value" widget="percentage" class="oe_inline"/>
+                            <field name="tipo_tasa"/>
+                            <field name="valor_tasa" widget="percentage" class="oe_inline"/>
                             <field name="tea" widget="percentage"/>
                         </group>
 
-                        <group string="Opciones de Tasa Nominal" invisible="rate_type != 'nominal'">
+                        <group string="Opciones de Tasa Nominal" invisible="tipo_tasa != 'nominal'">
                             <group>
-                                <field name="nominal_rate_period"/>
-                                <field name="nominal_rate_capitalization"/>
+                                <field name="periodo_tasa_nominal"/>
+                                <field name="capitalizacion_tasa_nominal"/>
                             </group>
                         </group>
                         
-                        <group string="Opciones de Tasa Efectiva" invisible="rate_type != 'effective'">
+                        <group string="Opciones de Tasa Efectiva" invisible="tipo_tasa != 'effective'">
                             <group>
-                                <field name="effective_rate_period"/>
+                                <field name="periodo_tasa_efectiva"/>
                             </group>
                         </group>
                             
@@ -65,13 +65,13 @@
         <field name="arch" type="xml">
             <search string="Buscar Productos Financieros">
                 <field name="name"/>
-                <field name="currency_id"/>
-                <field name="rate_type"/>
+                <field name="moneda_id"/>
+                <field name="tipo_tasa"/>
                 <filter string="Activo" name="active" domain="[('active', '=', True)]"/>
                 <filter string="Inactivo" name="inactive" domain="[('active', '=', False)]"/>
                 <group string="Agrupar por">
-                    <filter string="Tipo de Tasa" name="group_rate_type" context="{'group_by': 'rate_type'}"/>
-                    <filter string="Moneda" name="group_currency" context="{'group_by': 'currency_id'}"/>
+                    <filter string="Tipo de Tasa" name="group_rate_type" context="{'group_by': 'tipo_tasa'}"/>
+                    <filter string="Moneda" name="group_currency" context="{'group_by': 'moneda_id'}"/>
                 </group>
             </search>
         </field>

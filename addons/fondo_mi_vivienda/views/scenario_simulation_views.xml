@@ -7,7 +7,7 @@
             <list>
                 <field name="name"/>
                 <field name="active"/>
-                <field name="state"/>
+                <field name="estado"/>
             </list>
         </field>
     </record>
@@ -28,7 +28,7 @@
                                 type="object" 
                                 class="btn-secondary"
                     />
-                    <field name="state" widget="statusbar" />
+                    <field name="estado" widget="statusbar" />
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -38,27 +38,27 @@
                     </div>
                     <group>
                         <group string="Información General">
-                            <field name="partner_id"/>
-                            <field name="project_id"/>
-                            <field name="financial_product_id"/>
-                            <field name="currency_id" invisible="not financial_product_id"/>
-                            <field name="monthly_term"/>
+                            <field name="cliente_id"/>
+                            <field name="proyecto_id"/>
+                            <field name="producto_financiero_id"/>
+                            <field name="moneda_id" invisible="not producto_financiero_id"/>
+                            <field name="plazo_meses"/>
                         </group>
-                        <group string="Información Cliente" invisible="not partner_id">
-                            <field name="apply_to_bbp_integrator"/>
-                            <field name="has_received_housing_support_before"/>
+                        <group string="Información Cliente" invisible="not cliente_id">
+                            <field name="aplicar_a_bbp_integrador"/>
+                            <field name="ha_recibido_apoyo_habitacional_antes"/>
                         </group>
                     </group>
-                    <group string="Datos Financieros" invisible="not financial_product_id">
+                    <group string="Datos Financieros" invisible="not producto_financiero_id">
                         <group>
-                            <field name="property_value"/>
-                            <field name="down_payment"/>
+                            <field name="valor_vivienda"/>
+                            <field name="cuota_inicial"/>
                             <field name="tea" widget="percentage"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Cronograma de Pagos">
-                            <field name="fee_schedule_line_ids"/>
+                            <field name="lineas_cronograma_cuota_ids"/>
                         </page>
                     </notebook>
                 </sheet>

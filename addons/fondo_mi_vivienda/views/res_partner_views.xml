@@ -15,14 +15,14 @@
                 <notebook>
                     <page string="Fondo Mi Vivienda">
                         <group string="Información">
-                            <field name="apply_to_bbp_integrator" />
-                            <field name="has_received_housing_support_before" />
+                            <field name="aplicar_a_bbp_integrador" />
+                            <field name="ha_recibido_apoyo_habitacional_antes" />
                         </group>
                         <group string="Datos Financieros">
-                            <field name="currency_id" />
-                            <field name="financial_income"/>
-                            <field name="financial_expenses" />
-                            <field name="financial_debts" />
+                            <field name="moneda_id" />
+                            <field name="ingreso_financiero"/>
+                            <field name="gastos_financieros" />
+                            <field name="deudas_financieras" />
                         </group>
                     </page>
                 </notebook>

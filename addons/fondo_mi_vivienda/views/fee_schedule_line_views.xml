@@ -6,13 +6,13 @@
         <field name="arch" type="xml">
             <list editable="bottom">
                 <field name="name"/>
-                <field name="initial_balance"/>
-                <field name="amortization"/>
-                <field name="debt_relief_insurance"/>
-                <field name="property_insurance"/>
-                <field name="final_balance"/>
-                <field name="monthly_payment"/>
-                <field name="currency_id" optional="1"/>
+                <field name="saldo_inicial"/>
+                <field name="amortizacion"/>
+                <field name="seguro_desgravamen"/>
+                <field name="seguro_inmueble"/>
+                <field name="saldo_final"/>
+                <field name="pago_mensual"/>
+                <field name="moneda_id" optional="1"/>
             </list>
         </field>
     </record>

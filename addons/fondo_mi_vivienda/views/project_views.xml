@@ -6,9 +6,9 @@
         <field name="arch" type="xml">
             <list string="Proyectos">
                 <field name="name"/>
-                <field name="property_type"/>
-                <field name="is_property_sustainable"/>
-                <field name="state"/>
+                <field name="tipo_propiedad"/>
+                <field name="es_vivienda_sostenible"/>
+                <field name="estado"/>
                 <field name="active"/>
             </list>
         </field>
@@ -20,7 +20,7 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <field name="state" widget="statusbar" />
+                    <field name="estado" widget="statusbar" />
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -30,15 +30,15 @@
                     </div>
                     <group>
                         <group string="Información General">
-                            <field name="property_type"/>
-                            <field name="is_property_sustainable"/>
-                            <field name="currency_id"/>
-                            <field name="property_value"/>
+                            <field name="tipo_propiedad"/>
+                            <field name="es_vivienda_sostenible"/>
+                            <field name="moneda_id"/>
+                            <field name="valor_vivienda"/>
                         </group>
                         <group string="Ubicación">
-                            <field name="street"/>
-                            <field name="department"/>
-                            <field name="city"/>
+                            <field name="calle"/>
+                            <field name="departamento"/>
+                            <field name="ciudad"/>
                         </group>
                     </group>
                     <group string="Estado del Proyecto">
@@ -57,17 +57,17 @@
         <field name="arch" type="xml">
             <search string="Buscar Proyectos">
                 <field name="name"/>
-                <field name="property_type"/>
-                <field name="city"/>
-                <filter string="Activos" name="active" domain="[('active', '=', True)]"/>
-                <filter string="Inactivos" name="inactive" domain="[('active', '=', False)]"/>
-                <filter string="Borrador" name="draft" domain="[('state', '=', 'draft')]"/>
-                <filter string="Abierto" name="open" domain="[('state', '=', 'open')]"/>
-                <filter string="Cerrado" name="close" domain="[('state', '=', 'close')]"/>
+                <field name="tipo_propiedad"/>
+                <field name="ciudad"/>
+                <filter string="Activos" name="active" domain="[('activo', '=', True)]"/>
+                <filter string="Inactivos" name="inactive" domain="[('activo', '=', False)]"/>
+                <filter string="Borrador" name="draft" domain="[('estado', '=', 'borrador')]"/>
+                <filter string="Abierto" name="open" domain="[('estado', '=', 'abierto')]"/>
+                <filter string="Cerrado" name="close" domain="[('estado', '=', 'cerrado')]"/>
                 <group string="Agrupar por">
-                    <filter string="Tipo de Propiedad" name="group_property_type" context="{'group_by': 'property_type'}"/>
-                    <filter string="Estado" name="group_state" context="{'group_by': 'state'}"/>
-                    <filter string="Ciudad" name="group_city" context="{'group_by': 'city'}"/>
+                    <filter string="Tipo de Propiedad" name="group_property_type" context="{'group_by': 'tipo_propiedad'}"/>
+                    <filter string="Estado" name="group_state" context="{'group_by': 'estado'}"/>
+                    <filter string="Ciudad" name="group_city" context="{'group_by': 'ciudad'}"/>
                 </group>
             </search>
         </field>

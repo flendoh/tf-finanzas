@@ -13,21 +13,21 @@ class FinancialProduct(models.Model):
     _description = 'Producto Financiero'
 
     name = fields.Char(string='Nombre', required=True)
-    currency_id = fields.Many2one('res.currency', string='Moneda', required=True)
-    rate_type = fields.Selection([
+    moneda_id = fields.Many2one('res.currency', string='Moneda', required=True)
+    tipo_tasa = fields.Selection([
         ('nominal', 'Nominal'),
         ('effective', 'Efectiva')
     ], string='Tipo de Tasa', required=True)
 
     #Opciones TN
-    nominal_rate_period = fields.Selection([
+    periodo_tasa_nominal = fields.Selection([
         ('monthly', 'Mensual'),
         ('quarterly', 'Trimestral'),
         ('semi-annual', 'Semestral'),
         ('annual', 'Anual')
     ], string='Periodo de Tasa')
 
-    nominal_rate_capitalization = fields.Selection([
+    capitalizacion_tasa_nominal = fields.Selection([
         ('daily', 'Diaria'),
         ('monthly', 'Mensual'),
         ('quarterly', 'Trimestral'),
@@ -36,35 +36,35 @@ class FinancialProduct(models.Model):
     ], string='Capitalización de Tasa', default='daily')
 
     #Opciones TE
-    effective_rate_period = fields.Selection([
+    periodo_tasa_efectiva = fields.Selection([
         ('monthly', 'Mensual'),
         ('quarterly', 'Trimestral'),
         ('semi-annual', 'Semestral'),
         ('annual', 'Anual')
     ], string='Periodo de Tasa')
 
-    rate_value = fields.Float(string='Valor de la Tasa (%)')
+    valor_tasa = fields.Float(string='Valor de la Tasa (%)')
 
     tea = fields.Float(string='Tasa Efectiva Anual (%)', compute='_compute_tea', store=True, readonly=True)
     tem = fields.Float(string='Tasa Efectiva Mensual (%)', compute='_compute_tem', store=True, readonly=True)
 
-    active = fields.Boolean(string='Active', default=True)
+    active = fields.Boolean(string='Activo', default=True)
 
-    @api.depends('rate_value', 'rate_type', 'nominal_rate_period', 'nominal_rate_capitalization', 'effective_rate_period')
+    @api.depends('valor_tasa', 'tipo_tasa', 'periodo_tasa_nominal', 'capitalizacion_tasa_nominal', 'periodo_tasa_efectiva')
     def _compute_tea(self):
         for record in self:
             tea = None
 
-            if record.rate_type == 'nominal':
-                nominal_period = PERIOD_DAYS.get(record.nominal_rate_period, 0)
-                nominal_cap_period = PERIOD_DAYS.get(record.nominal_rate_capitalization, 0)
+            if record.tipo_tasa == 'nominal':
+                nominal_period = PERIOD_DAYS.get(record.periodo_tasa_nominal, 0)
+                nominal_cap_period = PERIOD_DAYS.get(record.capitalizacion_tasa_nominal, 0)
 
-                tea = self._n_rate_to_effective_rate(record.rate_value, nominal_period, nominal_cap_period, 360)
+                tea = self._n_rate_to_effective_rate(record.valor_tasa, nominal_period, nominal_cap_period, 360)
 
-            elif record.rate_type == 'effective':
-                e_period = PERIOD_DAYS.get(record.effective_rate_period, 0)
+            elif record.tipo_tasa == 'effective':
+                e_period = PERIOD_DAYS.get(record.periodo_tasa_efectiva, 0)
                 
-                tea = self._e_rate_to_effective_rate(record.rate_value, e_period, 360)
+                tea = self._e_rate_to_effective_rate(record.valor_tasa, e_period, 360)
 
             record.tea = tea
     
