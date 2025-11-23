@@ -60,7 +60,7 @@
                             <field name="seguro_desgravamen_mensual" widget="percentage"/>
                             <field name="seguro_de_inmueble_anual" widget="percentage"/>
                             <field name="tea" widget="percentage"/>
-                            <field name="tem" widget="percentage"/>
+                            <field name="tcea" widget="percentage"/>
                             <field name="cuota_mensual" widget="monetary" options="{'currency_field': 'moneda_id'}"/>
                         </group>
                     </group>

@@ -59,6 +59,10 @@ class ScenarioSimulation(models.Model):
         related="producto_financiero_id.tea",
     )
 
+    tcea = fields.Float(
+        string="TCEA",
+    )
+
     tem = fields.Float(
         string="TEM",
         related="producto_financiero_id.tem",
@@ -81,6 +85,7 @@ class ScenarioSimulation(models.Model):
         comodel_name="fondo_mi_vivienda.fee_schedule_line",
         inverse_name="simulacion_escenario_id",
         string="Cronograma de Cuotas",
+        readonly=True
     )
 
     plazo_meses = fields.Integer(
@@ -145,19 +150,22 @@ class ScenarioSimulation(models.Model):
         anterior = None
 
         cuota_mensual = self.cuota_mensual
-        tem = self.tem
+        tasa = self.tem
         valor_total = self.monto_a_financiar
+        seguro_inmueble_mensual = (self.seguro_de_inmueble_anual * self.valor_vivienda) / 12
 
         for mes in range(1, self.plazo_meses + 1):
             if anterior:
                 saldo_inicial = anterior.saldo_final
-                intereses = saldo_inicial * tem
+                intereses = saldo_inicial * tasa
                 amortizacion = cuota_mensual - intereses
+                seguro_desgravamen = saldo_inicial * self.seguro_desgravamen_mensual
                 saldo_final = saldo_inicial - amortizacion
             else:
                 saldo_inicial = valor_total
-                intereses = saldo_inicial * tem
+                intereses = saldo_inicial * tasa
                 amortizacion = cuota_mensual - intereses
+                seguro_desgravamen = saldo_inicial * self.seguro_desgravamen_mensual
                 saldo_final = saldo_inicial - amortizacion
             
             anterior = self.lineas_cronograma_cuota_ids.create({
@@ -168,6 +176,8 @@ class ScenarioSimulation(models.Model):
                 'saldo_final': saldo_final,
                 'amortizacion': amortizacion,
                 'intereses': intereses,
+                'seguro_desgravamen': seguro_desgravamen,
+                'seguro_inmueble': seguro_inmueble_mensual,
             })
     
     def action_export_pdf(self):
@@ -176,13 +186,16 @@ class ScenarioSimulation(models.Model):
     @api.depends('monto_a_financiar', 'tem', 'plazo_meses')
     def _calcular_cuota_mensual(self):
         for r in self:
-            numerador = r.tem * (1 + r.tem)**r.plazo_meses
-            denominador = (1 + r.tem)**r.plazo_meses - 1
+            tasa = r.tem
+            numerador = tasa * (1 + tasa)**r.plazo_meses
+            denominador = (1 + tasa)**r.plazo_meses - 1
             
             if denominador == 0:
                 continue
+
+            c = r.monto_a_financiar
             
-            cuota_mensual = r.monto_a_financiar * (numerador / denominador)
+            cuota_mensual = c * (numerador / denominador)
             
             r.write({
                 'cuota_mensual': cuota_mensual

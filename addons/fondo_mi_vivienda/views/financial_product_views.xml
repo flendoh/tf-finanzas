@@ -29,9 +29,6 @@
                     <group>
                         <group string="Información General">
                             <field name="moneda_id"/>
-                            <field name="active"/>
-                        </group>
-                        <group string="Seguros">
                             <field name="seguro_desgravamen_mensual" class="oe_inline" widget="percentage"/>
                             <field name="seguro_de_inmueble_anual" class="oe_inline" widget="percentage"/>
                         </group>
@@ -56,7 +53,6 @@
                                 <field name="periodo_tasa_efectiva"/>
                             </group>
                         </group>
-                            
                     </group>
                 </sheet>
             </form>
