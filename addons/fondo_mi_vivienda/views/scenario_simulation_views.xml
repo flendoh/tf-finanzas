@@ -34,6 +34,7 @@
                                 string="Ver Gráfico" 
                                 type="object" 
                                 class="btn-secondary"
+                                icon="fa-line-chart"
                                 invisible="not lineas_cronograma_cuota_ids"
                     />
                     <field name="estado" widget="statusbar" />
