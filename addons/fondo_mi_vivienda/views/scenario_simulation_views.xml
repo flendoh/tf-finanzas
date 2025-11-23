@@ -6,7 +6,9 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name"/>
-                <field name="active"/>
+                <field name="proyecto_id" />
+                <field name="producto_financiero_id" />
+                <field name="plazo_meses"/>
                 <field name="estado"/>
             </list>
         </field>
@@ -27,6 +29,12 @@
                                 string="Exportar a PDF" 
                                 type="object" 
                                 class="btn-secondary"
+                    />
+                    <button name="action_view_schedule_graph" 
+                                string="Ver Gráfico" 
+                                type="object" 
+                                class="btn-secondary"
+                                invisible="not lineas_cronograma_cuota_ids"
                     />
                     <field name="estado" widget="statusbar" />
                 </header>
@@ -65,7 +73,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Cronograma de Pagos">
+                        <page string="Cronograma de Pagos" invisible="not lineas_cronograma_cuota_ids">
                             <field name="lineas_cronograma_cuota_ids"/>
                         </page>
                     </notebook>

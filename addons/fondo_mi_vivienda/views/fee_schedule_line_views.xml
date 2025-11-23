@@ -17,4 +17,19 @@
             </list>
         </field>
     </record>
+
+    <record id="view_fee_schedule_line_graph" model="ir.ui.view">
+        <field name="name">fondo_mi_vivienda.fee_schedule_line.graph</field>
+        <field name="model">fondo_mi_vivienda.fee_schedule_line</field>
+        <field name="arch" type="xml">
+            <graph string="Cronograma de Pagos" type="line" sample="1">
+                <field name="periodo" type="row"/>
+                <field name="saldo_inicial" type="measure"/>
+                <field name="amortizacion" type="measure"/>
+                <field name="intereses" type="measure"/>
+                <field name="cuota_mensual" type="measure"/>
+                <field name="saldo_final" type="measure"/>
+            </graph>
+        </field>
+    </record>
 </odoo>

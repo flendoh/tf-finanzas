@@ -128,6 +128,8 @@ class ScenarioSimulation(models.Model):
     @api.depends('cuota_inicial', 'valor_vivienda')
     def _calcular_porcentaje_de_cuota_inicial(self):
         for r in self:
+            if r.valor_vivienda == 0:
+                continue
             r.porcentaje_de_cuota_inicial = r.cuota_inicial / r.valor_vivienda
 
     @api.depends('valor_vivienda', 'cuota_inicial')
@@ -182,6 +184,18 @@ class ScenarioSimulation(models.Model):
     
     def action_export_pdf(self):
         return True
+    
+    def action_view_schedule_graph(self):
+        self.ensure_one()
+        return {
+            'name': 'Gráfico de Cronograma',
+            'type': 'ir.actions.act_window',
+            'res_model': 'fondo_mi_vivienda.fee_schedule_line',
+            'view_mode': 'graph',
+            'view_id': self.env.ref('fondo_mi_vivienda.view_fee_schedule_line_graph').id,
+            'domain': [('simulacion_escenario_id', '=', self.id)],
+            'target': 'current',
+        }
     
     @api.depends('monto_a_financiar', 'tem', 'plazo_meses')
     def _calcular_cuota_mensual(self):
