@@ -29,6 +29,8 @@
                                 string="Exportar a PDF" 
                                 type="object" 
                                 class="btn-secondary"
+                                icon="fa-file-pdf-o"
+                                invisible="not lineas_cronograma_cuota_ids"
                     />
                     <button name="action_view_schedule_graph" 
                                 string="Ver Gráfico" 

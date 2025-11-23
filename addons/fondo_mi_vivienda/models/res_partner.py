@@ -21,18 +21,15 @@ class ResPartner(models.Model):
 
     ingreso_financiero = fields.Monetary(
         string="Ingreso financiero mensual",
-        help="Ingreso financiero mensual en pesos chilenos.",
         currency_field="moneda_id"
     )
 
     gastos_financieros = fields.Monetary(
         string="Gastos financieros mensuales",
-        help="Gastos financieros mensuales en pesos chilenos.",
         currency_field="moneda_id"
     )
 
     deudas_financieras = fields.Monetary(
         string="Deudas financieras mensuales",
-        help="Deudas financieras mensuales en pesos chilenos.",
         currency_field="moneda_id"
     )

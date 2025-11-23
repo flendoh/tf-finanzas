@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_scenario_simulation">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center">Cronograma de Pagos - Simulación de Escenario</h2>
+                    
+                    <!-- Información General -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Simulación:</strong></td>
+                                    <td t-field="doc.name"/>
+                                    <td><strong>Cliente:</strong></td>
+                                    <td t-field="doc.cliente_id.name"/>
+                                </tr>
+                                <tr>
+                                    <td><strong>Proyecto:</strong></td>
+                                    <td t-field="doc.proyecto_id.name"/>
+                                    <td><strong>Producto Financiero:</strong></td>
+                                    <td t-field="doc.producto_financiero_id.name"/>
+                                </tr>
+                                <tr>
+                                    <td><strong>Valor Vivienda:</strong></td>
+                                    <td t-field="doc.valor_vivienda" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                    <td><strong>Cuota Inicial:</strong></td>
+                                    <td t-field="doc.cuota_inicial" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                </tr>
+                                <tr>
+                                    <td><strong>Monto a Financiar:</strong></td>
+                                    <td t-field="doc.monto_a_financiar" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                    <td><strong>Plazo (meses):</strong></td>
+                                    <td t-field="doc.plazo_meses"/>
+                                </tr>
+                                <tr>
+                                    <td><strong>TEA:</strong></td>
+                                    <td><span t-field="doc.tea" t-options="{'widget': 'percentage'}"/></td>
+                                    <td><strong>Cuota Mensual:</strong></td>
+                                    <td t-field="doc.cuota_mensual" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Cronograma de Pagos -->
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <h3>Cronograma de Pagos</h3>
+                            <table class="table table-sm table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="text-center">Período</th>
+                                        <th class="text-center">Saldo Inicial</th>
+                                        <th class="text-center">Amortización</th>
+                                        <th class="text-center">Intereses</th>
+                                        <th class="text-center">Seg. Desgravamen</th>
+                                        <th class="text-center">Seg. Inmueble</th>
+                                        <th class="text-center">Cuota Total</th>
+                                        <th class="text-center">Saldo Final</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.lineas_cronograma_cuota_ids" t-as="linea">
+                                        <tr>
+                                            <td class="text-center" t-field="linea.periodo"/>
+                                            <td class="text-right" t-field="linea.saldo_inicial" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                            <td class="text-right" t-field="linea.amortizacion" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                            <td class="text-right" t-field="linea.intereses" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                            <td class="text-right" t-field="linea.seguro_desgravamen" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                            <td class="text-right" t-field="linea.seguro_inmueble" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                            <td class="text-right">
+                                                <t t-set="cuota_total" t-value="linea.amortizacion + linea.intereses + linea.seguro_desgravamen + linea.seguro_inmueble"/>
+                                                <span t-esc="cuota_total" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                            </td>
+                                            <td class="text-right" t-field="linea.saldo_final" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Resumen -->
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Total Amortización:</strong></td>
+                                    <td class="text-right">
+                                        <t t-set="total_amortizacion" t-value="sum(linea.amortizacion for linea in doc.lineas_cronograma_cuota_ids)"/>
+                                        <span t-esc="total_amortizacion" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total Intereses:</strong></td>
+                                    <td class="text-right">
+                                        <t t-set="total_intereses" t-value="sum(linea.intereses for linea in doc.lineas_cronograma_cuota_ids)"/>
+                                        <span t-esc="total_intereses" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Total Seguros:</strong></td>
+                                    <td class="text-right">
+                                        <t t-set="total_seguros" t-value="sum(linea.seguro_desgravamen + linea.seguro_inmueble for linea in doc.lineas_cronograma_cuota_ids)"/>
+                                        <span t-esc="total_seguros" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Notas -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <p class="text-muted text-center">
+                                Este cronograma es una simulación y puede estar sujeta a cambios según condiciones del mercado.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

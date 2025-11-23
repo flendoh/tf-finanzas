@@ -19,6 +19,8 @@
         'views/scenario_simulation_views.xml',
         'views/fee_schedule_line_views.xml',
         'views/financial_product_views.xml',
+        'report/scenario_simulation_report.xml',
+        'report/scenario_simulation_report_action.xml',
         'views/menus.xml',
     ],
     'installable': True,

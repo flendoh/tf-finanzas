@@ -183,7 +183,21 @@ class ScenarioSimulation(models.Model):
             })
     
     def action_export_pdf(self):
-        return True
+        self.ensure_one()
+        if not self.lineas_cronograma_cuota_ids:
+            raise ValidationError("No hay datos de cronograma para exportar.")
+        
+        return {
+            'type': 'ir.actions.report',
+            'report_name': 'fondo_mi_vivienda.report_scenario_simulation',
+            'report_type': 'qweb-pdf',
+            'report_file': 'fondo_mi_vivienda.report_scenario_simulation',
+            'name': f'Cronograma_{self.name}_{fields.Date.today()}',
+            'datas': {
+                'ids': [self.id],
+                'model': 'fondo_mi_vivienda.scenario_simulation',
+            },
+        }
     
     def action_view_schedule_graph(self):
         self.ensure_one()
