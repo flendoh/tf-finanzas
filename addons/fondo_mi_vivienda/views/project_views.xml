@@ -61,13 +61,10 @@
                 <field name="ciudad"/>
                 <filter string="Activos" name="active" domain="[('active', '=', True)]"/>
                 <filter string="Inactivos" name="inactive" domain="[('active', '=', False)]"/>
-                <filter string="Borrador" name="draft" domain="[('estado', '=', 'borrador')]"/>
-                <filter string="Abierto" name="open" domain="[('estado', '=', 'abierto')]"/>
-                <filter string="Cerrado" name="close" domain="[('estado', '=', 'cerrado')]"/>
                 <group string="Agrupar por">
                     <filter string="Tipo de Propiedad" name="group_property_type" context="{'group_by': 'tipo_propiedad'}"/>
                     <filter string="Estado" name="group_state" context="{'group_by': 'estado'}"/>
-                    <filter string="Ciudad" name="group_city" context="{'group_by': 'ciudad'}"/>
+                    <filter string="Departamento" name="group_department" context="{'group_by': 'departamento'}"/>
                 </group>
             </search>
         </field>
