@@ -6,10 +6,11 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name"/>
+                <field name="cliente_id" widget="many2one_avatar_user"/>
                 <field name="proyecto_id" />
                 <field name="producto_financiero_id" />
                 <field name="plazo_meses"/>
-                <field name="estado"/>
+                <field name="estado" decoration-success="estado == 'done'" decoration-info="estado == 'draft'" widget="badge"/>
             </list>
         </field>
     </record>
@@ -20,13 +21,20 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_calculate_schedule" 
-                                string="Calcular Cronograma" 
+                    <button name="action_confirmar" 
+                                string="Confirmar" 
                                 type="object" 
                                 class="btn-primary"
+                                invisible="estado == 'done' or not lineas_cronograma_cuota_ids"
+                    />
+                    <button name="action_calculate_schedule" 
+                                string="Calcular Cronograma" 
+                                type="object"
+                                invisible="estado == 'done'"
+                                t-attf-class="btn-primary"
                     />
                     <button name="action_export_pdf" 
-                                string="Exportar a PDF" 
+                                string="Exportar a PDF"
                                 type="object" 
                                 class="btn-secondary"
                                 icon="fa-file-pdf-o"
@@ -49,7 +57,7 @@
                     </div>
                     <group>
                         <group string="Información General">
-                            <field name="cliente_id"/>
+                            <field name="cliente_id" widget="many2one_avatar_user"/>
                             <field name="proyecto_id"/>
                             <field name="producto_financiero_id"/>
                             <field name="moneda_id" invisible="not producto_financiero_id"/>

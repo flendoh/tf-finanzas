@@ -51,7 +51,7 @@ class FinancialProduct(models.Model):
     #Seguros y Gastos
     seguro_desgravamen_mensual = fields.Float(string='Seguro Desgravamen Mensual', required=True)
     seguro_de_inmueble_anual = fields.Float(string='Seguro de Inmueble Anual', required=True)
-    gastos_iniciales = fields.Float(string='Gastos Iniciales', required=True)
+    gastos_iniciales = fields.Monetary(string='Gastos Iniciales', required=True, currency_field='moneda_id')
 
     active = fields.Boolean(string='Activo', default=True)
 

@@ -228,3 +228,11 @@ class ScenarioSimulation(models.Model):
             r.write({
                 'cuota_mensual': cuota_mensual
             })
+    
+    def action_confirmar(self):
+        self.ensure_one()
+        if not self.lineas_cronograma_cuota_ids:
+            raise ValidationError("No hay datos de cronograma para confirmar.")
+        self.write({
+            'estado': 'done',
+        })

@@ -3,16 +3,16 @@
     <data>
         <!-- Vista heredada del formulario de contacto -->
         <record id="view_partner_form_fondo_mi_vivienda" model="ir.ui.view">
-            <field name="name">res.partner.form.lodgify</field>
+            <field name="name">res.partner.form.mivivienda</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='button_box']" position="inside">
+                <xpath expr="//div[@class='oe_button_box']" position="inside">
                     <button class="oe_stat_button" type="object" name="action_view_simulaciones" icon="fa-folder">
                         <field string="Simulaciones" name="simulaciones_count" widget="statinfo"/>
                     </button>
                 </xpath>
-                <notebook>
+                <xpath expr="//notebook" position="inside">
                     <page string="Fondo Mi Vivienda">
                         <group string="Información">
                             <field name="aplicar_a_bbp_integrador" />
@@ -25,7 +25,7 @@
                             <field name="deudas_financieras" />
                         </group>
                     </page>
-                </notebook>
+                </xpath>
             </field>
         </record>
 
