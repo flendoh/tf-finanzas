@@ -48,9 +48,10 @@ class FinancialProduct(models.Model):
     tea = fields.Float(string='Tasa Efectiva Anual (%)', compute='_compute_tea', store=True, readonly=True)
     tem = fields.Float(string='Tasa Efectiva Mensual (%)', compute='_compute_tem', store=True, readonly=True)
 
-    #Seguros
+    #Seguros y Gastos
     seguro_desgravamen_mensual = fields.Float(string='Seguro Desgravamen Mensual', required=True)
     seguro_de_inmueble_anual = fields.Float(string='Seguro de Inmueble Anual', required=True)
+    gastos_iniciales = fields.Float(string='Gastos Iniciales', required=True)
 
     active = fields.Boolean(string='Activo', default=True)
 

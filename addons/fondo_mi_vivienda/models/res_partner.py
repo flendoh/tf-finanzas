@@ -33,3 +33,31 @@ class ResPartner(models.Model):
         string="Deudas financieras mensuales",
         currency_field="moneda_id"
     )
+
+    simulaciones_ids = fields.One2many(
+        comodel_name='fondo_mi_vivienda.scenario_simulation',
+        inverse_name='cliente_id',
+        string='Simulaciones de Escenario'
+    )
+
+    simulaciones_count = fields.Integer(
+        string='Número de Simulaciones',
+        compute='_compute_simulaciones_count'
+    )
+
+    def _compute_simulaciones_count(self):
+        for partner in self:
+            partner.simulaciones_count = len(partner.simulaciones_ids)
+
+    def action_view_simulaciones(self):
+        self.ensure_one()
+        return {
+            'name': f'Simulaciones de {self.name}',
+            'type': 'ir.actions.act_window',
+            'res_model': 'fondo_mi_vivienda.scenario_simulation',
+            'view_mode': 'list,form',
+            'domain': [('cliente_id', '=', self.id)],
+            'context': {
+                'default_cliente_id': self.id
+            },
+        }

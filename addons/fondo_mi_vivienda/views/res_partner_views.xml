@@ -7,11 +7,11 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <!--<xpath expr="//div[@name='button_box']" position="inside">
-                    <button class="oe_stat_button" type="object" name="action_view_lodgify_bookings" icon="fa-bed">
-                        <field string="Reservas" name="lodgify_booking_count" widget="statinfo"/>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button class="oe_stat_button" type="object" name="action_view_simulaciones" icon="fa-folder">
+                        <field string="Simulaciones" name="simulaciones_count" widget="statinfo"/>
                     </button>
-                </xpath>-->
+                </xpath>
                 <notebook>
                     <page string="Fondo Mi Vivienda">
                         <group string="Información">
