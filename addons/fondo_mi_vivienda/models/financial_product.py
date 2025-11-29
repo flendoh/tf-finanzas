@@ -10,7 +10,7 @@ PERIOD_DAYS = {
 
 class FinancialProduct(models.Model):
     _name = 'fondo_mi_vivienda.financial_product'
-    _description = 'Producto Financiero'
+    _description = 'Entidad Financiera'
 
     name = fields.Char(string='Nombre', required=True)
     moneda_id = fields.Many2one('res.currency', string='Moneda', required=True)

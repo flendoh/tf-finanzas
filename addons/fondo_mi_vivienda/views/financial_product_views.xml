@@ -4,7 +4,7 @@
         <field name="name">fondo_mi_vivienda.financial_product.list</field>
         <field name="model">fondo_mi_vivienda.financial_product</field>
         <field name="arch" type="xml">
-            <list string="Productos Financieros">
+            <list string="Entidades Financieras">
                 <field name="name"/>
                 <field name="moneda_id"/>
                 <field name="tipo_tasa"/>
@@ -19,11 +19,11 @@
         <field name="name">fondo_mi_vivienda.financial_product.form</field>
         <field name="model">fondo_mi_vivienda.financial_product</field>
         <field name="arch" type="xml">
-            <form string="Productos Financieros">
+            <form string="Entidades Financieras">
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Nombre del Producto Financiero..."/>
+                            <field name="name" placeholder="Nombre de la Entidad Financiera..."/>
                         </h1>
                     </div>
                     <group>
@@ -64,7 +64,7 @@
         <field name="name">fondo_mi_vivienda.financial_product.search</field>
         <field name="model">fondo_mi_vivienda.financial_product</field>
         <field name="arch" type="xml">
-            <search string="Buscar Productos Financieros">
+            <search string="Buscar Entidades Financieras">
                 <field name="name"/>
                 <field name="moneda_id"/>
                 <field name="tipo_tasa"/>
@@ -108,7 +108,7 @@
     </record>
 
     <record id="action_financial_product" model="ir.actions.act_window">
-        <field name="name">Productos Financieros</field>
+        <field name="name">Entidades Financieras</field>
         <field name="res_model">fondo_mi_vivienda.financial_product</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="view_financial_product_search"/>
