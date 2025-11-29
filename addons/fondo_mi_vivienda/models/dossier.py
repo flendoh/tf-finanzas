@@ -160,14 +160,14 @@ class Dossier(models.Model):
             if anterior:
                 saldo_inicial = anterior.saldo_final
                 intereses = saldo_inicial * tasa
-                amortizacion = cuota_mensual - intereses
                 seguro_desgravamen = saldo_inicial * self.seguro_desgravamen_mensual
+                amortizacion = cuota_mensual - intereses - seguro_desgravamen - seguro_inmueble_mensual
                 saldo_final = saldo_inicial - amortizacion
             else:
                 saldo_inicial = valor_total
                 intereses = saldo_inicial * tasa
-                amortizacion = cuota_mensual - intereses
                 seguro_desgravamen = saldo_inicial * self.seguro_desgravamen_mensual
+                amortizacion = cuota_mensual - intereses - seguro_desgravamen - seguro_inmueble_mensual
                 saldo_final = saldo_inicial - amortizacion
             
             anterior = self.lineas_cronograma_cuota_ids.create({
@@ -211,10 +211,10 @@ class Dossier(models.Model):
             'target': 'current',
         }
     
-    @api.depends('monto_a_financiar', 'tem', 'plazo_meses')
+    @api.depends('monto_a_financiar', 'tem', 'plazo_meses', 'seguro_desgravamen_mensual', 'seguro_de_inmueble_anual', 'valor_vivienda')
     def _calcular_cuota_mensual(self):
         for r in self:
-            tasa = r.tem
+            tasa = r.tem + r.seguro_desgravamen_mensual
             numerador = tasa * (1 + tasa)**r.plazo_meses
             denominador = (1 + tasa)**r.plazo_meses - 1
             
@@ -223,10 +223,11 @@ class Dossier(models.Model):
 
             c = r.monto_a_financiar
             
-            cuota_mensual = c * (numerador / denominador)
+            cuota_financiera = c * (numerador / denominador)
+            seguro_inmueble_mensual = (r.seguro_de_inmueble_anual * r.valor_vivienda) / 12
             
             r.write({
-                'cuota_mensual': cuota_mensual
+                'cuota_mensual': cuota_financiera + seguro_inmueble_mensual
             })
     
     def action_confirmar(self):
