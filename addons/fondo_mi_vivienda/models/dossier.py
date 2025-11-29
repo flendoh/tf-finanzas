@@ -5,9 +5,9 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class ScenarioSimulation(models.Model):
-    _name = 'fondo_mi_vivienda.scenario_simulation'
-    _description = 'Simulación de Escenario'
+class Dossier(models.Model):
+    _name = 'fondo_mi_vivienda.dossier'
+    _description = 'Expediente'
 
     name = fields.Char(string='Nombre', required=True)
 
@@ -83,7 +83,7 @@ class ScenarioSimulation(models.Model):
 
     lineas_cronograma_cuota_ids = fields.One2many(
         comodel_name="fondo_mi_vivienda.fee_schedule_line",
-        inverse_name="simulacion_escenario_id",
+        inverse_name="expediente_id",
         string="Cronograma de Cuotas",
         readonly=True
     )
@@ -173,7 +173,7 @@ class ScenarioSimulation(models.Model):
             anterior = self.lineas_cronograma_cuota_ids.create({
                 'saldo_inicial': saldo_inicial,
                 'periodo': mes,
-                'simulacion_escenario_id': self.id,
+                'expediente_id': self.id,
                 'cuota_mensual': cuota_mensual,
                 'saldo_final': saldo_final,
                 'amortizacion': amortizacion,
@@ -189,13 +189,13 @@ class ScenarioSimulation(models.Model):
         
         return {
             'type': 'ir.actions.report',
-            'report_name': 'fondo_mi_vivienda.report_scenario_simulation',
+            'report_name': 'fondo_mi_vivienda.report_dossier',
             'report_type': 'qweb-pdf',
-            'report_file': 'fondo_mi_vivienda.report_scenario_simulation',
+            'report_file': 'fondo_mi_vivienda.report_dossier',
             'name': f'Cronograma_{self.name}_{fields.Date.today()}',
             'datas': {
                 'ids': [self.id],
-                'model': 'fondo_mi_vivienda.scenario_simulation',
+                'model': 'fondo_mi_vivienda.dossier',
             },
         }
     
@@ -207,7 +207,7 @@ class ScenarioSimulation(models.Model):
             'res_model': 'fondo_mi_vivienda.fee_schedule_line',
             'view_mode': 'graph',
             'view_id': self.env.ref('fondo_mi_vivienda.view_fee_schedule_line_graph').id,
-            'domain': [('simulacion_escenario_id', '=', self.id)],
+            'domain': [('expediente_id', '=', self.id)],
             'target': 'current',
         }
     

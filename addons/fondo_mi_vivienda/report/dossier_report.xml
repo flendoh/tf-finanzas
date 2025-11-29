@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="report_scenario_simulation">
+    <template id="report_dossier">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
                 <t t-call="web.external_layout">
@@ -12,7 +12,7 @@
                             <div class="col-12">
                                 <table class="table table-borderless">
                                     <tr>
-                                        <td><strong>Simulación:</strong></td>
+                                        <td><strong>Expediente:</strong></td>
                                         <td><span t-field="doc.name"/></td>
                                         <td><strong>Cliente:</strong></td>
                                         <td><span t-field="doc.cliente_id.name"/></td>

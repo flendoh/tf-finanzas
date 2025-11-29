@@ -34,27 +34,27 @@ class ResPartner(models.Model):
         currency_field="moneda_id"
     )
 
-    simulaciones_ids = fields.One2many(
-        comodel_name='fondo_mi_vivienda.scenario_simulation',
+    expedientes_ids = fields.One2many(
+        comodel_name='fondo_mi_vivienda.dossier',
         inverse_name='cliente_id',
-        string='Simulaciones de Escenario'
+        string='Expedientes'
     )
 
-    simulaciones_count = fields.Integer(
-        string='Número de Simulaciones',
-        compute='_compute_simulaciones_count'
+    expedientes_count = fields.Integer(
+        string='Número de Expedientes',
+        compute='_compute_expedientes_count'
     )
 
-    def _compute_simulaciones_count(self):
+    def _compute_expedientes_count(self):
         for partner in self:
-            partner.simulaciones_count = len(partner.simulaciones_ids)
+            partner.expedientes_count = len(partner.expedientes_ids)
 
-    def action_view_simulaciones(self):
+    def action_view_expedientes(self):
         self.ensure_one()
         return {
-            'name': f'Simulaciones de {self.name}',
+            'name': f'Expedientes de {self.name}',
             'type': 'ir.actions.act_window',
-            'res_model': 'fondo_mi_vivienda.scenario_simulation',
+            'res_model': 'fondo_mi_vivienda.dossier',
             'view_mode': 'list,form',
             'domain': [('cliente_id', '=', self.id)],
             'context': {

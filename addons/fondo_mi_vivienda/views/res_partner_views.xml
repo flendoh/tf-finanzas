@@ -8,8 +8,8 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_button_box']" position="inside">
-                    <button class="oe_stat_button" type="object" name="action_view_simulaciones" icon="fa-folder">
-                        <field string="Simulaciones" name="simulaciones_count" widget="statinfo"/>
+                    <button class="oe_stat_button" type="object" name="action_view_expedientes" icon="fa-folder">
+                        <field string="Expedientes" name="expedientes_count" widget="statinfo"/>
                     </button>
                 </xpath>
                 <xpath expr="//notebook" position="inside">

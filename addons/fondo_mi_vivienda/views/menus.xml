@@ -13,10 +13,10 @@
               sequence="10"/>
 
     <!-- Menu Scenario Simulation -->
-    <menuitem id="menu_scenario_simulation"
-              name="Simulaciones de Escenario"
+    <menuitem id="menu_dossier"
+              name="Expedientes"
               parent="menu_fondo_mi_vivienda_root"
-              action="action_scenario_simulation"
+              action="action_dossier"
               sequence="5"/>
 
     <!-- Menu Financial Product -->

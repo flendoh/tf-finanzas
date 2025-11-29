@@ -22,8 +22,8 @@ class Project(models.Model):
 
     estado = fields.Selection(
         string='Estado',
-        selection=[('draft', 'Borrador'), ('open', 'Abierto'), ('close', 'Cerrado')],
-        default='draft',
+        selection=[('open', 'Abierto'), ('close', 'Cerrado')],
+        default='open',
         required=True
     )
 

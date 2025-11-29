@@ -8,15 +8,15 @@ class FeeScheduleLine(models.Model):
 
     periodo = fields.Integer(string='Periodo', required=True)
 
-    simulacion_escenario_id = fields.Many2one(
-        comodel_name='fondo_mi_vivienda.scenario_simulation',
+    expediente_id = fields.Many2one(
+        comodel_name='fondo_mi_vivienda.dossier',
         required=True
     )
 
     moneda_id = fields.Many2one(
         comodel_name="res.currency",
         string="Moneda",
-        related="simulacion_escenario_id.moneda_id"
+        related="expediente_id.moneda_id"
     )
 
     saldo_inicial = fields.Float(

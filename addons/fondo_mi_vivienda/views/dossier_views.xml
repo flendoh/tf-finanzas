@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="view_scenario_simulation_list" model="ir.ui.view">
-        <field name="name">fondo_mi_vivienda.scenario_simulation.list</field>
-        <field name="model">fondo_mi_vivienda.scenario_simulation</field>
+    <record id="view_dossier_list" model="ir.ui.view">
+        <field name="name">fondo_mi_vivienda.dossier.list</field>
+        <field name="model">fondo_mi_vivienda.dossier</field>
         <field name="arch" type="xml">
             <list>
                 <field name="name"/>
@@ -15,9 +15,9 @@
         </field>
     </record>
 
-    <record id="view_scenario_simulation_form" model="ir.ui.view">
-        <field name="name">fondo_mi_vivienda.scenario_simulation.form</field>
-        <field name="model">fondo_mi_vivienda.scenario_simulation</field>
+    <record id="view_dossier_form" model="ir.ui.view">
+        <field name="name">fondo_mi_vivienda.dossier.form</field>
+        <field name="model">fondo_mi_vivienda.dossier</field>
         <field name="arch" type="xml">
             <form>
                 <header>
@@ -52,7 +52,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Nombre de la Simulación de Escenario..."/>
+                            <field name="name" placeholder="Nombre del Expediente..."/>
                         </h1>
                     </div>
                     <group>
@@ -93,9 +93,9 @@
         </field>
     </record>
 
-    <record id="view_scenario_simulation_search" model="ir.ui.view">
-        <field name="name">fondo_mi_vivienda.scenario_simulation.search</field>
-        <field name="model">fondo_mi_vivienda.scenario_simulation</field>
+    <record id="view_dossier_search" model="ir.ui.view">
+        <field name="name">fondo_mi_vivienda.dossier.search</field>
+        <field name="model">fondo_mi_vivienda.dossier</field>
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
@@ -105,14 +105,14 @@
         </field>
     </record>
 
-    <record id="action_scenario_simulation" model="ir.actions.act_window">
-        <field name="name">Simulaciones de Escenario</field>
-        <field name="res_model">fondo_mi_vivienda.scenario_simulation</field>
+    <record id="action_dossier" model="ir.actions.act_window">
+        <field name="name">Expedientes</field>
+        <field name="res_model">fondo_mi_vivienda.dossier</field>
         <field name="view_mode">list,form</field>
-        <field name="search_view_id" ref="view_scenario_simulation_search"/>
+        <field name="search_view_id" ref="view_dossier_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Crea una nueva simulación de escenario
+                Crea un nuevo expediente
             </p>
         </field>
     </record>
