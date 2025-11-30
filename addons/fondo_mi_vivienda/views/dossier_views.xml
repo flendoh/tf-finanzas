@@ -65,13 +65,15 @@
                             <field name="tipo_periodo_gracia"/>
                             <field name="periodo_gracia_meses" invisible="not tipo_periodo_gracia"/>
                         </group>
-                        <group string="Información Cliente" invisible="not cliente_id">
-                            <field name="ha_recibido_apoyo_habitacional_antes"/>
-                            <field name="aplicar_a_bbp_integrador"/>
-                        </group>
-                        <group string="Información Vivienda" invisible="not proyecto_id">
-                            <field name="valor_vivienda"/>
-                            <field name="es_vivienda_sostenible"/>
+                        <group>
+                            <group string="Información Cliente" invisible="not cliente_id">
+                                <field name="ha_recibido_apoyo_habitacional_antes"/>
+                                <field name="aplicar_a_bbp_integrador"/>
+                            </group>
+                            <group string="Información Vivienda" invisible="not proyecto_id">
+                                <field name="valor_vivienda"/>
+                                <field name="es_vivienda_sostenible"/>
+                            </group>
                         </group>
                     </group>
                     <group string="Datos Financieros" invisible="not producto_financiero_id">
