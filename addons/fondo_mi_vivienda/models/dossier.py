@@ -38,10 +38,14 @@ class Dossier(models.Model):
         related="cliente_id.aplicar_a_bbp_integrador"
     )
 
+    es_vivienda_sostenible = fields.Boolean(string='¿La vivienda es sostenible?', related="proyecto_id.es_vivienda_sostenible")
+
     ha_recibido_apoyo_habitacional_antes = fields.Boolean(
         string="¿Ha recibido apoyo habitacional antes?",
         related="cliente_id.ha_recibido_apoyo_habitacional_antes"
     )
+
+    total_bbp = fields.Monetary(string='Total BBP', currency_field='moneda_id', compute="_calcular_total_bbp", store=True)
 
     producto_financiero_id = fields.Many2one(
         comodel_name="fondo_mi_vivienda.financial_product",
@@ -94,6 +98,20 @@ class Dossier(models.Model):
         required=True,
     )
 
+    tipo_periodo_gracia = fields.Selection(
+        string="Tipo de Periodo de Gracia",
+        selection=[
+            ('total', 'Total'),
+            ('parcial', 'Parcial'),
+        ],
+        help="Total: No se pagan intereses ni amortización (se capitalizan). Parcial: Se pagan solo intereses."
+    )
+
+    periodo_gracia_meses = fields.Integer(
+        string="Meses de Periodo de Gracia",
+        default=0,
+    )
+
     cuota_mensual = fields.Float(
         string="Cuota Mensual",
         compute="_calcular_cuota_mensual",
@@ -138,13 +156,17 @@ class Dossier(models.Model):
         for r in self:
             r.monto_a_financiar = r.valor_vivienda - r.cuota_inicial
 
-    @api.constrains('plazo_meses')
+    @api.constrains('plazo_meses', 'periodo_gracia_meses')
     def _check_plazo_meses(self):
         for record in self:
             MIN_PLAZO_MESES = 60
             MAX_PLAZO_MESES = 300
             if record.plazo_meses < MIN_PLAZO_MESES or record.plazo_meses > MAX_PLAZO_MESES:
                 raise ValidationError(f"El plazo debe ser como mínimo {MIN_PLAZO_MESES} meses y como máximo {MAX_PLAZO_MESES} meses.")
+            if record.periodo_gracia_meses >= record.plazo_meses:
+                raise ValidationError("El periodo de gracia debe ser menor al plazo total del crédito.")
+            if record.periodo_gracia_meses < 0:
+                raise ValidationError("El periodo de gracia no puede ser negativo.")
 
     def action_calculate_schedule(self):
         self.ensure_one()
@@ -152,7 +174,7 @@ class Dossier(models.Model):
 
         anterior = None
 
-        cuota_mensual = self.cuota_mensual
+        cuota_full = self.cuota_mensual # Esta es la cuota a pagar después de la gracia
         tasa = self.tem
         valor_total = self.monto_a_financiar
         seguro_inmueble_mensual = (self.seguro_de_inmueble_anual * self.valor_vivienda) / 12
@@ -160,22 +182,37 @@ class Dossier(models.Model):
         for mes in range(1, self.plazo_meses + 1):
             if anterior:
                 saldo_inicial = anterior.saldo_final
-                intereses = saldo_inicial * tasa
-                seguro_desgravamen = saldo_inicial * self.seguro_desgravamen_mensual
-                amortizacion = cuota_mensual - intereses - seguro_desgravamen - seguro_inmueble_mensual
-                saldo_final = saldo_inicial - amortizacion
             else:
                 saldo_inicial = valor_total
-                intereses = saldo_inicial * tasa
-                seguro_desgravamen = saldo_inicial * self.seguro_desgravamen_mensual
-                amortizacion = cuota_mensual - intereses - seguro_desgravamen - seguro_inmueble_mensual
+
+            intereses = saldo_inicial * tasa
+            seguro_desgravamen = saldo_inicial * self.seguro_desgravamen_mensual
+            
+            # Lógica de Periodo de Gracia
+            es_periodo_gracia = mes <= self.periodo_gracia_meses
+            
+            if es_periodo_gracia:
+                amortizacion = 0.0
+                if self.tipo_periodo_gracia == 'total':
+                    # Gracia Total: Interés se capitaliza. Cuota solo seguros.
+                    # El cliente paga solo seguros (Desgravamen + Inmueble)
+                    cuota_mes = seguro_desgravamen + seguro_inmueble_mensual
+                    saldo_final = saldo_inicial + intereses # Capitalización de intereses
+                else:
+                    # Gracia Parcial: Se paga interés + seguros. Saldo se mantiene.
+                    cuota_mes = intereses + seguro_desgravamen + seguro_inmueble_mensual
+                    saldo_final = saldo_inicial
+            else:
+                # Periodo Normal
+                cuota_mes = cuota_full
+                amortizacion = cuota_mes - intereses - seguro_desgravamen - seguro_inmueble_mensual
                 saldo_final = saldo_inicial - amortizacion
             
             anterior = self.lineas_cronograma_cuota_ids.create({
                 'saldo_inicial': saldo_inicial,
                 'periodo': mes,
                 'expediente_id': self.id,
-                'cuota_mensual': cuota_mensual,
+                'cuota_mensual': cuota_mes,
                 'saldo_final': saldo_final,
                 'amortizacion': amortizacion,
                 'intereses': intereses,
@@ -212,19 +249,35 @@ class Dossier(models.Model):
             'target': 'current',
         }
     
-    @api.depends('monto_a_financiar', 'tem', 'plazo_meses', 'seguro_desgravamen_mensual', 'seguro_de_inmueble_anual', 'valor_vivienda')
+    @api.depends('monto_a_financiar', 'tem', 'plazo_meses', 'seguro_desgravamen_mensual', 'seguro_de_inmueble_anual', 'valor_vivienda', 'tipo_periodo_gracia', 'periodo_gracia_meses')
     def _calcular_cuota_mensual(self):
         for r in self:
-            tasa = r.tem + r.seguro_desgravamen_mensual
-            numerador = tasa * (1 + tasa)**r.plazo_meses
-            denominador = (1 + tasa)**r.plazo_meses - 1
+            tasa_mensual = r.tem + r.seguro_desgravamen_mensual
+            
+            if r.plazo_meses <= r.periodo_gracia_meses:
+                r.cuota_mensual = 0.0
+                continue
+                
+            plazo_restante = r.plazo_meses - r.periodo_gracia_meses
+            numerador = tasa_mensual * (1 + tasa_mensual)**plazo_restante
+            denominador = (1 + tasa_mensual)**plazo_restante - 1
             
             if denominador == 0:
                 continue
 
-            c = r.monto_a_financiar
+            saldo_a_financiar = r.monto_a_financiar
+
+            # Ajustar saldo según tipo de gracia
+            if r.tipo_periodo_gracia == 'total' and r.periodo_gracia_meses > 0:
+                # En gracia total, los intereses se capitalizan durante el periodo de gracia
+                # Saldo futuro = Saldo actual * (1 + tasa)^periodo
+                # Nota: Usamos la tasa pura (TEM) para capitalizar intereses, no la tasa con seguros.
+                # Sin embargo, si el seguro de desgravamen también se capitaliza, se usaría la combinada.
+                # Asumiremos estándar: Solo intereses se capitalizan.
+                saldo_a_financiar = r.monto_a_financiar * ((1 + r.tem)**r.periodo_gracia_meses)
             
-            cuota_financiera = c * (numerador / denominador)
+            # Calcular la cuota constante para el periodo restante
+            cuota_financiera = saldo_a_financiar * (numerador / denominador)
             seguro_inmueble_mensual = (r.seguro_de_inmueble_anual * r.valor_vivienda) / 12
             
             r.write({
@@ -274,3 +327,8 @@ class Dossier(models.Model):
         self.write({
             'estado': 'done',
         })
+
+    @api.depends('es_vivienda_sostenible', 'aplicar_a_bbp_integrador', 'valor_vivienda')
+    def _calcular_total_bbp(self):
+        for r in self:
+            pass

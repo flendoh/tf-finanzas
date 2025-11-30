@@ -93,6 +93,9 @@
                                     <li invisible="not departamento">
                                         <i class="fa fa-map-marker"/> <field name="departamento"/>
                                     </li>
+                                    <li invisible="not es_vivienda_sostenible">
+                                        <i class="fa fa-leaf text-success" title="Vivienda Sostenible"/> Vivienda Sostenible
+                                    </li>
                                 </ul>
                             </div>
                         </div>

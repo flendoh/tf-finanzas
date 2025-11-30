@@ -62,18 +62,24 @@
                             <field name="producto_financiero_id"/>
                             <field name="moneda_id" invisible="not producto_financiero_id"/>
                             <field name="plazo_meses"/>
+                            <field name="tipo_periodo_gracia"/>
+                            <field name="periodo_gracia_meses" invisible="not tipo_periodo_gracia"/>
                         </group>
                         <group string="Información Cliente" invisible="not cliente_id">
-                            <field name="aplicar_a_bbp_integrador"/>
                             <field name="ha_recibido_apoyo_habitacional_antes"/>
+                            <field name="aplicar_a_bbp_integrador"/>
+                        </group>
+                        <group string="Información Vivienda" invisible="not proyecto_id">
+                            <field name="valor_vivienda"/>
+                            <field name="es_vivienda_sostenible"/>
                         </group>
                     </group>
                     <group string="Datos Financieros" invisible="not producto_financiero_id">
                         <group>
-                            <field name="valor_vivienda"/>
                             <field name="cuota_inicial"/>
                             <field name="porcentaje_de_cuota_inicial" widget="percentage"/>
                             <field name="monto_a_financiar" />
+                            <field name="total_bbp"/>
                         </group>
                         <group>
                             <field name="seguro_desgravamen_mensual" widget="percentage"/>
