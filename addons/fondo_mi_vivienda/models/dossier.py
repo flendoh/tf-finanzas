@@ -345,26 +345,69 @@ class Dossier(models.Model):
                 r.total_bbp = 0.0
                 continue
 
-            valor = r.valor_vivienda
-            base = 0.0
+            v = r.valor_vivienda
 
-            # Determinar BBP Base 
-            if 67200 <= valor <= 93100:
-                base = 43000
-            elif 93101 <= valor <= 139400:
-                base = 38500
-            elif 139401 <= valor <= 232200: #ejemplo de 200k
-                base = 20500
-            elif 232201 <= valor <= 343900:
-                base = 10800
+            # Determinar rango
+            if 68800 <= v <= 98100:
+                rango = "R1"
+            elif 98100 < v <= 146900:
+                rango = "R2"
+            elif 146900 < v <= 244600:
+                rango = "R3"
+            elif 244600 < v <= 362100:
+                rango = "R4"
+            elif 362100 < v <= 488800:
+                rango = "R5"
             else:
-                base = 0.0
+                r.total_bbp = 0
+                continue
 
-            # Calcular adicionales
-            # Valores de los datos de la imagen: 29,900 - 20,500 = 9,400 (6300 + 3100)
-            bono_sostenible = 6300.0 if r.es_vivienda_sostenible else 0.0
-            bono_integrador = 3100.0 if r.aplicar_a_bbp_integrador else 0.0
+            # tabla de fmvivienda
+            tabla_bbp = {
+                "R1": {
+                    "trad": 27400,
+                    "sost": 33700,
+                    "int_trad": 31000,
+                    "int_sost": 37300,
+                },
+                "R2": {
+                    "trad": 22800,
+                    "sost": 29100,
+                    "int_trad": 26400,
+                    "int_sost": 32700,
+                },
+                "R3": {
+                    "trad": 20900,
+                    "sost": 27200,
+                    "int_trad": 24500,
+                    "int_sost": 30800,
+                },
+                "R4": {
+                    "trad": 7800,
+                    "sost": 14100,
+                    "int_trad": 11400,
+                    "int_sost": 17700,
+                },
+                "R5": {
+                    "trad": 0,
+                    "sost": 0,
+                    "int_trad": 0,
+                    "int_sost": 0,
+                }
+            }
 
-            # Asignar a los campos de la vista
-            r.bbp_base_amount = base
-            r.total_bbp = base + bono_sostenible + bono_integrador
+            # tipo
+            if r.aplicar_a_bbp_integrador:
+                tipo = "int_sost" if r.es_vivienda_sostenible else "int_trad"
+            else:
+                tipo = "sost" if r.es_vivienda_sostenible else "trad"
+
+            bbp_base = tabla_bbp[rango][tipo]
+
+            # Bono integrador adicional
+            bbp_adicional = 0
+            if r.aplicar_a_bbp_integrador:
+                bbp_adicional = 3600
+
+            # Total
+            r.total_bbp = bbp_base + bbp_adicional

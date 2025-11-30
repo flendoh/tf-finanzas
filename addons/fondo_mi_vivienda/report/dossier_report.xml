@@ -6,6 +6,9 @@
                 <t t-call="web.external_layout">
                     <div class="page">
                         <h2 class="text-center">Cronograma de Pagos - Simulación de Escenario</h2>
+                        <div class="text-center text-muted">
+                            <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                        </div>
                         
                         <!-- Información General -->
                         <div class="row mt-4">
@@ -30,16 +33,35 @@
                                         <td><span t-field="doc.cuota_inicial" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/></td>
                                     </tr>
                                     <tr>
+                                        <td><strong>Total BBP:</strong></td>
+                                        <td><span t-field="doc.total_bbp" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/></td>
+                                        <td><strong>Otros Gastos Iniciales:</strong></td>
+                                        <td><span t-field="doc.otros_gastos_iniciales" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/></td>
+                                    </tr>
+                                    <tr>
                                         <td><strong>Monto a Financiar:</strong></td>
                                         <td><span t-field="doc.monto_a_financiar" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/></td>
                                         <td><strong>Plazo (meses):</strong></td>
                                         <td><span t-field="doc.plazo_meses"/></td>
                                     </tr>
                                     <tr>
-                                        <td><strong>TEA:</strong></td>
-                                        <td><span t-esc="'{:.2f} %'.format(doc.tea * 100)"/></td>
+                                        <td><strong>Periodo de Gracia:</strong></td>
+                                        <td>
+                                            <t t-if="doc.periodo_gracia_meses > 0">
+                                                <span t-field="doc.periodo_gracia_meses"/> meses (<span t-field="doc.tipo_periodo_gracia"/>)
+                                            </t>
+                                            <t t-else="">
+                                                No aplica
+                                            </t>
+                                        </td>
                                         <td><strong>Cuota Mensual:</strong></td>
                                         <td><span t-field="doc.cuota_mensual" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>TEA:</strong></td>
+                                        <td><span t-esc="'{:.2f} %'.format(doc.tea * 100)"/></td>
+                                        <td><strong>TCEA:</strong></td>
+                                        <td><span t-esc="'{:.2f} %'.format(doc.tcea * 100)"/></td>
                                     </tr>
                                 </table>
                             </div>
@@ -106,12 +128,6 @@
                                         <td class="text-right">
                                             <t t-set="total_seguros" t-value="sum(linea.seguro_desgravamen + linea.seguro_inmueble for linea in doc.lineas_cronograma_cuota_ids)"/>
                                             <span t-esc="total_seguros" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>TCEA:</strong></td>
-                                        <td class="text-right">
-                                            <span t-esc="'{:.2f} %'.format(doc.tcea * 100)"/>
                                         </td>
                                     </tr>
                                 </table>
