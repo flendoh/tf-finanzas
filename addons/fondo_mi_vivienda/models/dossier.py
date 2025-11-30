@@ -45,7 +45,9 @@ class Dossier(models.Model):
         related="cliente_id.ha_recibido_apoyo_habitacional_antes"
     )
 
-    total_bbp = fields.Monetary(string='Total BBP', currency_field='moneda_id', compute="_calcular_total_bbp", store=True)
+    total_bbp = fields.Monetary(string='Total BBP', currency_field='moneda_id', compute="_compute_bbp_values", store=True)
+
+    bbp_base_amount = fields.Monetary(string='BBP Base', currency_field='moneda_id', compute="_compute_bbp_values", store=True)
 
     producto_financiero_id = fields.Many2one(
         comodel_name="fondo_mi_vivienda.financial_product",
@@ -142,6 +144,13 @@ class Dossier(models.Model):
         related="producto_financiero_id.seguro_de_inmueble_anual",
     )
 
+    otros_gastos_iniciales = fields.Monetary(
+        string="Otros Gastos Iniciales",
+        currency_field="moneda_id",
+        related="producto_financiero_id.otros_gastos_iniciales",
+        help="Gastos adicionales como administrativos, notariales, registrales o de tasación. Este monto se suma automáticamente al capital del préstamo."
+    )
+
     active = fields.Boolean(string='Activo', default=True)
 
     @api.depends('cuota_inicial', 'valor_vivienda')
@@ -151,10 +160,10 @@ class Dossier(models.Model):
                 continue
             r.porcentaje_de_cuota_inicial = r.cuota_inicial / r.valor_vivienda
 
-    @api.depends('valor_vivienda', 'cuota_inicial')
+    @api.depends('valor_vivienda', 'cuota_inicial', 'bbp_base_amount', 'otros_gastos_iniciales')
     def _calcular_monto_a_financiar(self):
         for r in self:
-            r.monto_a_financiar = r.valor_vivienda - r.cuota_inicial
+            r.monto_a_financiar = r.valor_vivienda - r.cuota_inicial - r.bbp_base_amount + r.otros_gastos_iniciales
 
     @api.constrains('plazo_meses', 'periodo_gracia_meses')
     def _check_plazo_meses(self):
@@ -328,7 +337,34 @@ class Dossier(models.Model):
             'estado': 'done',
         })
 
-    @api.depends('es_vivienda_sostenible', 'aplicar_a_bbp_integrador', 'valor_vivienda')
-    def _calcular_total_bbp(self):
+    @api.depends('valor_vivienda', 'es_vivienda_sostenible', 'aplicar_a_bbp_integrador', 'ha_recibido_apoyo_habitacional_antes')
+    def _compute_bbp_values(self):
         for r in self:
-            pass
+            if r.ha_recibido_apoyo_habitacional_antes:
+                r.bbp_base_amount = 0.0
+                r.total_bbp = 0.0
+                continue
+
+            valor = r.valor_vivienda
+            base = 0.0
+
+            # Determinar BBP Base 
+            if 67200 <= valor <= 93100:
+                base = 43000
+            elif 93101 <= valor <= 139400:
+                base = 38500
+            elif 139401 <= valor <= 232200: #ejemplo de 200k
+                base = 20500
+            elif 232201 <= valor <= 343900:
+                base = 10800
+            else:
+                base = 0.0
+
+            # Calcular adicionales
+            # Valores de los datos de la imagen: 29,900 - 20,500 = 9,400 (6300 + 3100)
+            bono_sostenible = 6300.0 if r.es_vivienda_sostenible else 0.0
+            bono_integrador = 3100.0 if r.aplicar_a_bbp_integrador else 0.0
+
+            # Asignar a los campos de la vista
+            r.bbp_base_amount = base
+            r.total_bbp = base + bono_sostenible + bono_integrador

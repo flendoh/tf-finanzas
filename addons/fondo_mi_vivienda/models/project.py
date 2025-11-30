@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 class Project(models.Model):
     _name = 'fondo_mi_vivienda.project'
@@ -46,3 +47,9 @@ class Project(models.Model):
             'domain': [('proyecto_id', '=', self.id)],
             'context': {'default_proyecto_id': self.id},
         }
+    
+    @api.constrains('valor_vivienda')
+    def _check_valor_vivienda(self):
+        for r in self:
+            if not 67400 <= r.valor_vivienda <= 355100:
+                raise ValidationError("El valor de la vivienda debe estar entre 67,400 y 355,100.")

@@ -51,7 +51,12 @@ class FinancialProduct(models.Model):
     #Seguros y Gastos
     seguro_desgravamen_mensual = fields.Float(string='Seguro Desgravamen Mensual', required=True)
     seguro_de_inmueble_anual = fields.Float(string='Seguro de Inmueble Anual', required=True)
-    gastos_iniciales = fields.Monetary(string='Gastos Iniciales', required=True, currency_field='moneda_id')
+    otros_gastos_iniciales = fields.Monetary(
+        string='Otros Gastos Iniciales',
+        required=True,
+        currency_field='moneda_id',
+        help="Gastos adicionales como administrativos, notariales, registrales o de tasación. Este monto se suma automáticamente al capital del préstamo."
+    )
 
     active = fields.Boolean(string='Activo', default=True)
 

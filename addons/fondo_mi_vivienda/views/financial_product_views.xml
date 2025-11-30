@@ -31,7 +31,7 @@
                             <field name="moneda_id"/>
                             <field name="seguro_desgravamen_mensual" class="oe_inline" widget="percentage"/>
                             <field name="seguro_de_inmueble_anual" class="oe_inline" widget="percentage"/>
-                            <field name="gastos_iniciales"/>
+                            <field name="otros_gastos_iniciales"/>
                         </group>
                     </group>
                     

@@ -10,6 +10,7 @@
                 <field name="proyecto_id" />
                 <field name="producto_financiero_id" />
                 <field name="plazo_meses"/>
+                <field name="create_date" string="Fecha de Creación" />
                 <field name="estado" decoration-success="estado == 'done'" decoration-info="estado == 'draft'" widget="badge"/>
             </list>
         </field>
@@ -74,8 +75,8 @@
                         <group string="Datos Financieros" invisible="not producto_financiero_id">
                             <field name="cuota_inicial"/>
                             <field name="porcentaje_de_cuota_inicial" widget="percentage"/>
+                            <field name="otros_gastos_iniciales"/>
                             <field name="monto_a_financiar" />
-                            <field name="total_bbp"/>
                             <field name="seguro_desgravamen_mensual" widget="percentage"/>
                             <field name="seguro_de_inmueble_anual" widget="percentage"/>
                             <field name="tea" widget="percentage"/>
@@ -85,6 +86,8 @@
                         <group string="Información Vivienda" invisible="not proyecto_id">
                             <field name="valor_vivienda"/>
                             <field name="es_vivienda_sostenible"/>
+                            <field name="bbp_base_amount"/>
+                            <field name="total_bbp"/>
                         </group>
                     </group>
                     <notebook>

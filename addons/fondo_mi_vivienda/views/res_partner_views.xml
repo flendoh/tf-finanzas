@@ -14,15 +14,17 @@
                 </xpath>
                 <xpath expr="//notebook" position="inside">
                     <page string="Fondo Mi Vivienda">
-                        <group string="Información">
-                            <field name="aplicar_a_bbp_integrador" />
-                            <field name="ha_recibido_apoyo_habitacional_antes" />
-                        </group>
-                        <group string="Datos Financieros">
-                            <field name="moneda_id" />
-                            <field name="ingreso_financiero"/>
-                            <field name="gastos_financieros" />
-                            <field name="deudas_financieras" />
+                        <group>
+                            <group string="Datos Financieros">
+                                <field name="moneda_id" />
+                                <field name="ingreso_financiero"/>
+                                <field name="gastos_financieros" />
+                                <field name="deudas_financieras" />
+                            </group>
+                            <group string="Información">
+                                <field name="aplicar_a_bbp_integrador" />
+                                <field name="ha_recibido_apoyo_habitacional_antes" />
+                            </group>
                         </group>
                     </page>
                 </xpath>
