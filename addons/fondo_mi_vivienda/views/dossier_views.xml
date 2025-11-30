@@ -65,15 +65,9 @@
                             <field name="tipo_periodo_gracia"/>
                             <field name="periodo_gracia_meses" invisible="not tipo_periodo_gracia"/>
                         </group>
-                        <group>
-                            <group string="Información Cliente" invisible="not cliente_id">
-                                <field name="ha_recibido_apoyo_habitacional_antes"/>
-                                <field name="aplicar_a_bbp_integrador"/>
-                            </group>
-                            <group string="Información Vivienda" invisible="not proyecto_id">
-                                <field name="valor_vivienda"/>
-                                <field name="es_vivienda_sostenible"/>
-                            </group>
+                        <group string="Información Cliente" invisible="not cliente_id">
+                            <field name="ha_recibido_apoyo_habitacional_antes"/>
+                            <field name="aplicar_a_bbp_integrador"/>
                         </group>
                     </group>
                     <group string="Datos Financieros" invisible="not producto_financiero_id">
@@ -82,13 +76,15 @@
                             <field name="porcentaje_de_cuota_inicial" widget="percentage"/>
                             <field name="monto_a_financiar" />
                             <field name="total_bbp"/>
-                        </group>
-                        <group>
                             <field name="seguro_desgravamen_mensual" widget="percentage"/>
                             <field name="seguro_de_inmueble_anual" widget="percentage"/>
                             <field name="tea" widget="percentage"/>
                             <field name="tcea" widget="percentage"/>
                             <field name="cuota_mensual" widget="monetary" options="{'currency_field': 'moneda_id'}"/>
+                        </group>
+                        <group string="Información Vivienda" invisible="not proyecto_id">
+                            <field name="valor_vivienda"/>
+                            <field name="es_vivienda_sostenible"/>
                         </group>
                     </group>
                     <notebook>
