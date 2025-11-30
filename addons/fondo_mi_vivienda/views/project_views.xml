@@ -23,6 +23,11 @@
                     <field name="estado" widget="statusbar" />
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_expedientes" type="object" class="oe_stat_button" icon="fa-folder-open">
+                            <field name="expediente_count" widget="statinfo" string="Expedientes"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="Nombre del Proyecto..."/>

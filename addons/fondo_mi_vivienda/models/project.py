@@ -27,3 +27,22 @@ class Project(models.Model):
     )
 
     active = fields.Boolean(string='Activo', default=True)
+
+    expediente_ids = fields.One2many('fondo_mi_vivienda.dossier', 'proyecto_id', string='Expedientes')
+    expediente_count = fields.Integer(string='Expedientes', compute='_compute_dossier_count')
+
+    @api.depends('expediente_ids')
+    def _compute_dossier_count(self):
+        for record in self:
+            record.expediente_count = len(record.expediente_ids)
+
+    def action_view_expedientes(self):
+        self.ensure_one()
+        return {
+            'name': 'Expedientes',
+            'type': 'ir.actions.act_window',
+            'res_model': 'fondo_mi_vivienda.dossier',
+            'view_mode': 'list,form',
+            'domain': [('proyecto_id', '=', self.id)],
+            'context': {'default_proyecto_id': self.id},
+        }

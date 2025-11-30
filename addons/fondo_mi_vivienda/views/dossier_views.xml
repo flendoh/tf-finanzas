@@ -70,8 +70,8 @@
                             <field name="aplicar_a_bbp_integrador"/>
                         </group>
                     </group>
-                    <group string="Datos Financieros" invisible="not producto_financiero_id">
-                        <group>
+                    <group>
+                        <group string="Datos Financieros" invisible="not producto_financiero_id">
                             <field name="cuota_inicial"/>
                             <field name="porcentaje_de_cuota_inicial" widget="percentage"/>
                             <field name="monto_a_financiar" />
