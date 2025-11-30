@@ -61,6 +61,7 @@ class Dossier(models.Model):
 
     tcea = fields.Float(
         string="TCEA",
+        compute="_calcular_tcea",
     )
 
     tem = fields.Float(
@@ -230,6 +231,42 @@ class Dossier(models.Model):
                 'cuota_mensual': cuota_financiera + seguro_inmueble_mensual
             })
     
+    @api.depends('cuota_mensual', 'monto_a_financiar', 'plazo_meses')
+    def _calcular_tcea(self):
+        for r in self:
+            if r.monto_a_financiar <= 0 or r.cuota_mensual <= 0 or r.plazo_meses <= 0:
+                r.tcea = 0.0
+                continue
+
+            # Búsqueda binaria para encontrar la TIR mensual
+            # P = C * ((1 - (1+i)^-n) / i)
+            P = r.monto_a_financiar
+            C = r.cuota_mensual
+            n = r.plazo_meses
+            
+            low = 0.0
+            high = 1.0
+            i = 0.0
+            
+            for _ in range(100):
+                i = (low + high) / 2
+                if i == 0:
+                    vp = C * n
+                else:
+                    vp = C * ((1 - (1 + i)**-n) / i)
+                
+                if abs(vp - P) < 0.001:
+                    break
+                
+                if vp > P:
+                    # Si VP calculado es mayor, necesitamos descontar más (tasa más alta)
+                    low = i
+                else:
+                    high = i
+            
+            # Anualizar la TIR mensual para obtener la TCEA
+            r.tcea = (1 + i)**12 - 1
+
     def action_confirmar(self):
         self.ensure_one()
         if not self.lineas_cronograma_cuota_ids:

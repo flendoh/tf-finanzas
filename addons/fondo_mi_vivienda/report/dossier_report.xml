@@ -37,7 +37,7 @@
                                     </tr>
                                     <tr>
                                         <td><strong>TEA:</strong></td>
-                                        <td><span t-field="doc.tea" t-options="{'widget': 'percentage'}"/></td>
+                                        <td><span t-esc="'{:.2f} %'.format(doc.tea * 100)"/></td>
                                         <td><strong>Cuota Mensual:</strong></td>
                                         <td><span t-field="doc.cuota_mensual" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/></td>
                                     </tr>
@@ -106,6 +106,12 @@
                                         <td class="text-right">
                                             <t t-set="total_seguros" t-value="sum(linea.seguro_desgravamen + linea.seguro_inmueble for linea in doc.lineas_cronograma_cuota_ids)"/>
                                             <span t-esc="total_seguros" t-options="{'widget': 'monetary', 'display_currency': doc.moneda_id}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>TCEA:</strong></td>
+                                        <td class="text-right">
+                                            <span t-esc="'{:.2f} %'.format(doc.tcea * 100)"/>
                                         </td>
                                     </tr>
                                 </table>
