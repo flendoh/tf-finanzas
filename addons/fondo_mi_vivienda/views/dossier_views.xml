@@ -8,7 +8,7 @@
                 <field name="name"/>
                 <field name="cliente_id" widget="many2one_avatar_user"/>
                 <field name="proyecto_id" />
-                <field name="producto_financiero_id" />
+                <field name="producto_financiero_id" widget="many2one_avatar"/>
                 <field name="plazo_meses"/>
                 <field name="create_date" string="Fecha de Creación" />
                 <field name="estado" decoration-success="estado == 'done'" decoration-info="estado == 'draft'" widget="badge"/>
@@ -60,7 +60,7 @@
                         <group string="Información General">
                             <field name="cliente_id" widget="many2one_avatar_user"/>
                             <field name="proyecto_id"/>
-                            <field name="producto_financiero_id"/>
+                            <field name="producto_financiero_id" widget="many2one_avatar"/>
                             <field name="moneda_id" invisible="not producto_financiero_id"/>
                             <field name="plazo_meses"/>
                             <field name="tipo_periodo_gracia"/>

@@ -4,7 +4,6 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-
 class Dossier(models.Model):
     _name = 'fondo_mi_vivienda.dossier'
     _description = 'Expediente'

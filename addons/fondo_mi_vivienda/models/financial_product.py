@@ -11,7 +11,9 @@ PERIOD_DAYS = {
 class FinancialProduct(models.Model):
     _name = 'fondo_mi_vivienda.financial_product'
     _description = 'Entidad Financiera'
+    _inherit = ['image.mixin']
 
+    avatar_128 = fields.Image(related='image_128', string="Avatar 128")
     name = fields.Char(string='Nombre', required=True)
     moneda_id = fields.Many2one('res.currency', string='Moneda', required=True)
     tipo_tasa = fields.Selection([
