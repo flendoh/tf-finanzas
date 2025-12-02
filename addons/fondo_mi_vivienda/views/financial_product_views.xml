@@ -33,27 +33,43 @@
                         <field name="seguro_de_inmueble_anual" class="oe_inline" widget="percentage"/>
                         <field name="otros_gastos_iniciales"/>
                     </group>
-                    
-                    <group>
-                        <group string="Configuración de Tasa">
-                            <field name="tipo_tasa"/>
-                            <field name="valor_tasa" widget="percentage" class="oe_inline"/>
-                            <field name="tea" widget="percentage"/>
-                        </group>
 
-                        <group string="Opciones de Tasa Nominal" invisible="tipo_tasa != 'nominal'">
+                    <notebook>
+                        <page string="Tasa de Interés">
                             <group>
-                                <field name="periodo_tasa_nominal"/>
-                                <field name="capitalizacion_tasa_nominal"/>
+                                <group string="Configuración de Tasa">
+                                    <field name="tipo_tasa"/>
+                                    <field name="valor_tasa" widget="percentage" class="oe_inline"/>
+                                    <field name="tea" widget="percentage"/>
+                                </group>
+
+                                <group string="Opciones de Tasa Nominal" invisible="tipo_tasa != 'nominal'">
+                                    <group>
+                                        <field name="periodo_tasa_nominal"/>
+                                        <field name="capitalizacion_tasa_nominal"/>
+                                    </group>
+                                </group>
+                                
+                                <group string="Opciones de Tasa Efectiva" invisible="tipo_tasa != 'effective'">
+                                    <group>
+                                        <field name="periodo_tasa_efectiva"/>
+                                    </group>
+                                </group>
                             </group>
-                        </group>
-                        
-                        <group string="Opciones de Tasa Efectiva" invisible="tipo_tasa != 'effective'">
+                        </page>
+                        <page string="Políticas y Requisitos">
                             <group>
-                                <field name="periodo_tasa_efectiva"/>
+                                <label for="plazo_minimo" string="Rango de Plazo (Meses)"/>
+                                <div class="o_row">
+                                    <field name="plazo_minimo" class="oe_inline" placeholder="Mínimo"/>
+                                    <i class="fa fa-long-arrow-right text-muted mx-2" aria-label="Rango" title="hasta"/> 
+                                    <field name="plazo_maximo" class="oe_inline" placeholder="Máximo"/>
+                                </div>
+                                <field name="ingreso_minimo"/>
+                                <field name="maximo_periodo_gracia"/>
                             </group>
-                        </group>
-                    </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -84,6 +100,10 @@
             <kanban class="o_kanban_mobile">
                 <field name="id"/>
                 <field name="image_1920"/>
+                <field name="plazo_minimo"/>
+                <field name="plazo_maximo"/>
+                <field name="ingreso_minimo"/>
+                <field name="maximo_periodo_gracia"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
@@ -101,6 +121,15 @@
                                     </li>
                                     <li>
                                         <i class="fa fa-area-chart"/> TEA <field name="tea" widget="percentage"/>
+                                    </li>
+                                    <li t-if="record.ingreso_minimo.raw_value">
+                                        <i class="fa fa-money"/> Min: <field name="ingreso_minimo"/>
+                                    </li>
+                                    <li t-if="record.plazo_minimo.raw_value or record.plazo_maximo.raw_value">
+                                        <i class="fa fa-calendar"/> Plazo: <field name="plazo_minimo"/><i class="fa fa-long-arrow-right text-muted mx-2" aria-label="Rango" title="hasta"/><field name="plazo_maximo"/> meses
+                                    </li>
+                                    <li t-if="record.maximo_periodo_gracia.raw_value">
+                                        <i class="fa fa-hourglass-half"/> Max. Gracia: <field name="maximo_periodo_gracia"/> meses
                                     </li>
                                 </ul>
                             </div>

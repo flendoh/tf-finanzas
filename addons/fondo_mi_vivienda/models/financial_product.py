@@ -62,6 +62,12 @@ class FinancialProduct(models.Model):
 
     active = fields.Boolean(string='Activo', default=True)
 
+    # Políticas y Requisitos
+    plazo_minimo = fields.Integer(string='Plazo Mínimo (Meses)', help='Plazo mínimo permitido para el crédito.')
+    plazo_maximo = fields.Integer(string='Plazo Máximo (Meses)', help='Plazo máximo permitido para el crédito.')
+    ingreso_minimo = fields.Monetary(string='Ingreso Mínimo Mensual', currency_field='moneda_id', help='Ingreso mínimo requerido del cliente.')
+    maximo_periodo_gracia = fields.Integer(string='Máximo Periodo de Gracia (Meses)', help='Máximo periodo de gracia permitido.')
+
     @api.depends('valor_tasa', 'tipo_tasa', 'periodo_tasa_nominal', 'capitalizacion_tasa_nominal', 'periodo_tasa_efectiva')
     def _compute_tea(self):
         for record in self:

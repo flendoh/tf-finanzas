@@ -8,7 +8,6 @@
                 <field name="name"/>
                 <field name="tipo_propiedad"/>
                 <field name="es_vivienda_sostenible"/>
-                <field name="estado"/>
                 <field name="active"/>
             </list>
         </field>
@@ -19,9 +18,6 @@
         <field name="model">fondo_mi_vivienda.project</field>
         <field name="arch" type="xml">
             <form>
-                <header>
-                    <field name="estado" widget="statusbar" />
-                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_expedientes" type="object" class="oe_stat_button" icon="fa-folder-open">
@@ -68,7 +64,6 @@
                 <filter string="Inactivos" name="inactive" domain="[('active', '=', False)]"/>
                 <group string="Agrupar por">
                     <filter string="Tipo de Propiedad" name="group_property_type" context="{'group_by': 'tipo_propiedad'}"/>
-                    <filter string="Estado" name="group_state" context="{'group_by': 'estado'}"/>
                     <filter string="Departamento" name="group_department" context="{'group_by': 'departamento'}"/>
                 </group>
             </search>

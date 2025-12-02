@@ -20,13 +20,6 @@ class Project(models.Model):
     departamento = fields.Many2one('res.country.state', string='Departamento', domain="[('country_id', '=', 173)]")
     ciudad = fields.Char(string='Ciudad')
 
-    estado = fields.Selection(
-        string='Estado',
-        selection=[('open', 'Abierto'), ('close', 'Cerrado')],
-        default='open',
-        required=True
-    )
-
     active = fields.Boolean(string='Activo', default=True)
 
     expediente_ids = fields.One2many('fondo_mi_vivienda.dossier', 'proyecto_id', string='Expedientes')

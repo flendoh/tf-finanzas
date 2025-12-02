@@ -14,7 +14,8 @@ class Dossier(models.Model):
         string="Estado",
         selection=[
             ('draft', 'Borrador'),
-            ('done', 'Hecho'),
+            ('done', 'Califica'),
+            ('closed', 'No Califica'),
         ],
         default='draft',
     )
