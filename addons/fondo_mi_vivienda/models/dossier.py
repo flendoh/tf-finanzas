@@ -333,6 +333,42 @@ class Dossier(models.Model):
         self.ensure_one()
         if not self.lineas_cronograma_cuota_ids:
             raise ValidationError("No hay datos de cronograma para confirmar.")
+        
+        producto = self.producto_financiero_id
+        cliente = self.cliente_id
+        errores = []
+
+        # 1. Verificar Plazo
+        if producto.plazo_minimo > 0 and self.plazo_meses < producto.plazo_minimo:
+            errores.append(f"El plazo ({self.plazo_meses} meses) es menor al mínimo permitido ({producto.plazo_minimo} meses)")
+        
+        if producto.plazo_maximo > 0 and self.plazo_meses > producto.plazo_maximo:
+            errores.append(f"El plazo ({self.plazo_meses} meses) excede el máximo permitido ({producto.plazo_maximo} meses)")
+
+        # 2. Verificar Ingreso Mínimo
+        if producto.ingreso_minimo > 0:
+            if cliente.ingreso_financiero < producto.ingreso_minimo:
+                errores.append(f"El ingreso del cliente ({cliente.ingreso_financiero}) es menor al mínimo requerido ({producto.ingreso_minimo})")
+
+        # 3. Verificar Periodo de Gracia
+        if producto.maximo_periodo_gracia > 0 and self.periodo_gracia_meses > producto.maximo_periodo_gracia:
+            errores.append(f"El periodo de gracia ({self.periodo_gracia_meses} meses) excede el máximo permitido ({producto.maximo_periodo_gracia} meses)")
+
+        if errores:
+            self.write({'estado': 'closed'})
+            mensaje = "El cliente NO CALIFICA para este producto financiero por las siguientes razones: " + ", ".join(errores)
+            
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'Evaluación Completada: No Califica',
+                    'message': mensaje,
+                    'type': 'warning',
+                    'sticky': True,
+                }
+            }
+        
         self.write({
             'estado': 'done',
         })
