@@ -9,7 +9,7 @@ Este módulo permite la gestión y simulación de créditos hipotecarios bajo el
 Flujo de Trabajo
 ----------------
 
-1. Configuración de Datos Maestros
+1. Configuración de Datos
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Antes de realizar simulaciones, es necesario configurar los datos base del sistema:
