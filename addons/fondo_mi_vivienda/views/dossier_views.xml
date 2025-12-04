@@ -53,7 +53,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Nombre del Expediente..."/>
+                            <field name="name" readonly="1"/>
                         </h1>
                     </div>
                     <group>

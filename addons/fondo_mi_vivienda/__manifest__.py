@@ -14,6 +14,7 @@
     ],
     'data': [
         'security/ir.model.access.csv',
+        'data/ir_sequence_data.xml',
         'views/res_partner_views.xml',
         'views/project_views.xml',
         'views/dossier_views.xml',

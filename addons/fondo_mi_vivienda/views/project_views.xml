@@ -6,7 +6,9 @@
         <field name="arch" type="xml">
             <list string="Proyectos">
                 <field name="name"/>
+                <field name="valor_vivienda"/>
                 <field name="tipo_propiedad"/>
+                <field name="departamento"/>
                 <field name="es_vivienda_sostenible"/>
                 <field name="active"/>
             </list>

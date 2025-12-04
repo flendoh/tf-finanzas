@@ -8,7 +8,13 @@ class Dossier(models.Model):
     _name = 'fondo_mi_vivienda.dossier'
     _description = 'Expediente'
 
-    name = fields.Char(string='Nombre', required=True)
+    name = fields.Char(string='Referencia', required=True, copy=False, readonly=True, index=True, default=lambda self: 'Nuevo Expediente')
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', 'Nuevo') == 'Nuevo':
+            vals['name'] = self.env['ir.sequence'].next_by_code('fondo_mi_vivienda.dossier') or 'Nuevo Expediente'
+        return super(Dossier, self).create(vals)
 
     estado = fields.Selection(
         string="Estado",
