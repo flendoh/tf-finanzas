@@ -12,7 +12,7 @@ class Dossier(models.Model):
 
     @api.model
     def create(self, vals):
-        if vals.get('name', 'Nuevo') == 'Nuevo':
+        if vals.get('name', 'Nuevo Expediente') == 'Nuevo Expediente':
             vals['name'] = self.env['ir.sequence'].next_by_code('fondo_mi_vivienda.dossier') or 'Nuevo Expediente'
         return super(Dossier, self).create(vals)
 
@@ -30,6 +30,14 @@ class Dossier(models.Model):
         comodel_name="res.partner",
         string="Cliente",
         required=True
+    )
+
+    ingreso_financiero = fields.Monetary(
+        string="Ingreso financiero mensual",
+        currency_field="moneda_id",
+        compute="_compute_ingreso_financiero",
+        store=True,
+        readonly=True
     )
 
     proyecto_id = fields.Many2one(
@@ -82,12 +90,25 @@ class Dossier(models.Model):
     valor_vivienda = fields.Monetary(
         string="Valor de la Vivienda",
         currency_field="moneda_id",
-        required=True,
         compute="_compute_valor_vivienda",
-        readonly=False
+        store=True,
+        readonly=True
     )
 
-    @api.depends('proyecto_id', 'moneda_id')
+    @api.depends('cliente_id', 'moneda_id', 'moneda_id.rate_ids', 'cliente_id.moneda_id', 'cliente_id.ingreso_financiero')
+    def _compute_ingreso_financiero(self):
+        for r in self:
+            if r.cliente_id and r.moneda_id:
+                r.ingreso_financiero = r.cliente_id.moneda_id._convert(
+                    r.cliente_id.ingreso_financiero,
+                    r.moneda_id,
+                    r.env.company,
+                    fields.Date.today()
+                )
+            else:
+                r.ingreso_financiero = 0.0
+
+    @api.depends('proyecto_id', 'moneda_id', 'moneda_id.rate_ids', 'proyecto_id.moneda_id', 'proyecto_id.valor_vivienda')
     def _compute_valor_vivienda(self):
         for r in self:
             if r.proyecto_id and r.moneda_id:
@@ -401,7 +422,10 @@ class Dossier(models.Model):
                 r.total_bbp = 0.0
                 continue
 
-            v = r.valor_vivienda
+            company_currency = r.env.company.currency_id
+            v = r.proyecto_id.valor_vivienda
+            if r.moneda_id and r.proyecto_id.moneda_id != company_currency:
+                v = r.moneda_id._convert(v, company_currency, r.env.company, fields.Date.today())
 
             # Determinar rango
             if 68800 <= v <= 98100:
@@ -466,9 +490,8 @@ class Dossier(models.Model):
                 bbp_adicional = 3600
 
             # Total - Convertir de vuelta a la moneda del expediente
-            total_company = bbp_base + bbp_adicional
-            company_currency = r.env.company.currency_id
+            total_bbp = bbp_base + bbp_adicional
             if r.moneda_id and r.moneda_id != company_currency:
-                r.total_bbp = company_currency._convert(total_company, r.moneda_id, r.env.company, fields.Date.today())
+                r.total_bbp = company_currency._convert(total_bbp, r.moneda_id, r.env.company, fields.Date.today())
             else:
-                r.total_bbp = total_company
+                r.total_bbp = total_bbp

@@ -69,6 +69,7 @@
                         <group string="Información Cliente" invisible="not cliente_id">
                             <field name="ha_recibido_apoyo_habitacional_antes"/>
                             <field name="aplicar_a_bbp_integrador"/>
+                            <field name="ingreso_financiero"/>
                         </group>
                     </group>
                     <group>
