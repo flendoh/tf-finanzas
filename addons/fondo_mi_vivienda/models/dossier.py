@@ -53,8 +53,6 @@ class Dossier(models.Model):
 
     total_bbp = fields.Monetary(string='Total BBP', currency_field='moneda_id', compute="_compute_bbp_values", store=True)
 
-    bbp_base_amount = fields.Monetary(string='BBP Base', currency_field='moneda_id', compute="_compute_bbp_values", store=True)
-
     producto_financiero_id = fields.Many2one(
         comodel_name="fondo_mi_vivienda.financial_product",
         string="Entidad Financiera",
@@ -85,8 +83,25 @@ class Dossier(models.Model):
         string="Valor de la Vivienda",
         currency_field="moneda_id",
         required=True,
-        related="proyecto_id.valor_vivienda"
+        compute="_compute_valor_vivienda",
+        readonly=False
     )
+
+    @api.depends('proyecto_id', 'moneda_id')
+    def _compute_valor_vivienda(self):
+        for r in self:
+            if r.proyecto_id and r.moneda_id:
+                if r.proyecto_id.moneda_id != r.moneda_id:
+                    r.valor_vivienda = r.proyecto_id.moneda_id._convert(
+                        r.proyecto_id.valor_vivienda,
+                        r.moneda_id,
+                        r.env.company,
+                        fields.Date.today()
+                    )
+                else:
+                    r.valor_vivienda = r.proyecto_id.valor_vivienda
+            else:
+                r.valor_vivienda = r.valor_vivienda or 0.0
 
     cuota_inicial = fields.Monetary(
         string="Cuota Inicial",
@@ -166,10 +181,10 @@ class Dossier(models.Model):
                 continue
             r.porcentaje_de_cuota_inicial = r.cuota_inicial / r.valor_vivienda
 
-    @api.depends('valor_vivienda', 'cuota_inicial', 'bbp_base_amount', 'otros_gastos_iniciales')
+    @api.depends('valor_vivienda', 'cuota_inicial', 'total_bbp', 'otros_gastos_iniciales')
     def _calcular_monto_a_financiar(self):
         for r in self:
-            r.monto_a_financiar = r.valor_vivienda - r.cuota_inicial - r.bbp_base_amount + r.otros_gastos_iniciales
+            r.monto_a_financiar = r.valor_vivienda - r.cuota_inicial - r.total_bbp + r.otros_gastos_iniciales
 
     @api.constrains('plazo_meses', 'periodo_gracia_meses')
     def _check_plazo_meses(self):
@@ -379,11 +394,10 @@ class Dossier(models.Model):
             'estado': 'done',
         })
 
-    @api.depends('valor_vivienda', 'es_vivienda_sostenible', 'aplicar_a_bbp_integrador', 'ha_recibido_apoyo_habitacional_antes')
+    @api.depends('valor_vivienda', 'es_vivienda_sostenible', 'aplicar_a_bbp_integrador', 'ha_recibido_apoyo_habitacional_antes', 'moneda_id')
     def _compute_bbp_values(self):
         for r in self:
             if r.ha_recibido_apoyo_habitacional_antes:
-                r.bbp_base_amount = 0.0
                 r.total_bbp = 0.0
                 continue
 
@@ -451,5 +465,10 @@ class Dossier(models.Model):
             if r.aplicar_a_bbp_integrador:
                 bbp_adicional = 3600
 
-            # Total
-            r.total_bbp = bbp_base + bbp_adicional
+            # Total - Convertir de vuelta a la moneda del expediente
+            total_company = bbp_base + bbp_adicional
+            company_currency = r.env.company.currency_id
+            if r.moneda_id and r.moneda_id != company_currency:
+                r.total_bbp = company_currency._convert(total_company, r.moneda_id, r.env.company, fields.Date.today())
+            else:
+                r.total_bbp = total_company

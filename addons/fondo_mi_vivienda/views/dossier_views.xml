@@ -86,7 +86,6 @@
                         <group string="Información Vivienda" invisible="not proyecto_id">
                             <field name="valor_vivienda"/>
                             <field name="es_vivienda_sostenible"/>
-                            <field name="bbp_base_amount"/>
                             <field name="total_bbp"/>
                         </group>
                     </group>
