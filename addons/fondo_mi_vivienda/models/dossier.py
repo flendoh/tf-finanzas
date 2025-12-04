@@ -36,7 +36,6 @@ class Dossier(models.Model):
         string="Ingreso financiero mensual",
         currency_field="moneda_id",
         compute="_compute_ingreso_financiero",
-        store=True,
         readonly=True
     )
 
@@ -91,11 +90,10 @@ class Dossier(models.Model):
         string="Valor de la Vivienda",
         currency_field="moneda_id",
         compute="_compute_valor_vivienda",
-        store=True,
         readonly=True
     )
 
-    @api.depends('cliente_id', 'moneda_id', 'moneda_id.rate_ids', 'cliente_id.moneda_id', 'cliente_id.ingreso_financiero')
+    @api.depends('cliente_id', 'moneda_id')
     def _compute_ingreso_financiero(self):
         for r in self:
             if r.cliente_id and r.moneda_id:
@@ -108,7 +106,7 @@ class Dossier(models.Model):
             else:
                 r.ingreso_financiero = 0.0
 
-    @api.depends('proyecto_id', 'moneda_id', 'moneda_id.rate_ids', 'proyecto_id.moneda_id', 'proyecto_id.valor_vivienda')
+    @api.depends('proyecto_id', 'moneda_id')
     def _compute_valor_vivienda(self):
         for r in self:
             if r.proyecto_id and r.moneda_id:
