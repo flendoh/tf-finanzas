@@ -10,7 +10,8 @@ class FeeScheduleLine(models.Model):
 
     expediente_id = fields.Many2one(
         comodel_name='fondo_mi_vivienda.dossier',
-        required=True
+        required=True,
+        ondelete='cascade'
     )
 
     moneda_id = fields.Many2one(
