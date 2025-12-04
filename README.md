@@ -10,18 +10,18 @@ Este módulo permite gestionar simulaciones de créditos hipotecarios bajo el es
 | `name` | Char | Nombre del expediente (Requerido) |
 | `estado` | Selection | Borrador / Hecho |
 | `cliente_id` | Many2one | Relación con `res.partner` |
+| `ingreso_financiero` | Monetary | Calculado (basado en cliente) |
 | `proyecto_id` | Many2one | Relación con `fondo_mi_vivienda.project` |
 | `aplicar_a_bbp_integrador` | Boolean | Relacionado con cliente |
 | `es_vivienda_sostenible` | Boolean | Relacionado con proyecto |
 | `ha_recibido_apoyo_habitacional_antes` | Boolean | Relacionado con cliente |
 | `total_bbp` | Monetary | Calculado (BBP Base + BBP Integrador) |
-| `bbp_base_amount` | Monetary | Calculado según valor de vivienda |
 | `producto_financiero_id` | Many2one | Relación con `fondo_mi_vivienda.financial_product` |
 | `moneda_id` | Many2one | Relacionado con producto financiero |
 | `tea` | Float | Tasa Efectiva Anual (Relacionado) |
 | `tcea` | Float | Tasa de Costo Efectivo Anual (Calculado) |
 | `tem` | Float | Tasa Efectiva Mensual (Relacionado) |
-| `valor_vivienda` | Monetary | Relacionado con proyecto |
+| `valor_vivienda` | Monetary | Calculado (basado en proyecto) |
 | `cuota_inicial` | Monetary | Monto de cuota inicial |
 | `lineas_cronograma_cuota_ids` | One2many | Relación con `fondo_mi_vivienda.fee_schedule_line` |
 | `plazo_meses` | Integer | Plazo del crédito en meses |
@@ -32,7 +32,7 @@ Este módulo permite gestionar simulaciones de créditos hipotecarios bajo el es
 | `porcentaje_de_cuota_inicial` | Float | Calculado |
 | `seguro_desgravamen_mensual` | Float | Relacionado con producto financiero |
 | `seguro_de_inmueble_anual` | Float | Relacionado con producto financiero |
-| `otros_gastos_iniciales` | Monetary | Relacionado con producto financiero |
+| `otros_gastos_iniciales` | Monetary | Calculado (basado en producto financiero) / Editable |
 | `active` | Boolean | Activo/Inactivo |
 
 ### `fondo_mi_vivienda.project` (Proyecto Vivienda)
