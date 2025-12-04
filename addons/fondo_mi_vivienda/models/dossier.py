@@ -59,7 +59,7 @@ class Dossier(models.Model):
         related="cliente_id.ha_recibido_apoyo_habitacional_antes"
     )
 
-    total_bbp = fields.Monetary(string='Total BBP', currency_field='moneda_id', compute="_compute_bbp_values", store=True)
+    total_bbp = fields.Monetary(string='Total BBP', currency_field='moneda_id', compute="_compute_bbp_values")
 
     producto_financiero_id = fields.Many2one(
         comodel_name="fondo_mi_vivienda.financial_product",
