@@ -67,3 +67,9 @@ class FalabellaAdapter(Component):
         _logger.info(f"GetDocument params: {params}")
         
         return mapper.map_document(webservice.get("GetDocument", params=params), external_id)
+
+    def get_order_url(self, external_id):
+        """
+        Returns the URL of the order in the marketplace.
+        """
+        return "https://sellercenter.falabella.com/order/view/id/%s" % external_id

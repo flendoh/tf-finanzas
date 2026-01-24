@@ -77,12 +77,6 @@ class MarketAccount(models.Model):
         string='Eventos Salientes',
         compute='_compute_event_queue_count'
     )
-    
-    feature_order_document = fields.Boolean(
-        string="Soporta Documentos de Orden",
-        compute="_compute_features",
-        help="Indica si este backend soporta la descarga de documentos de orden (etiquetas, facturas, etc.)"
-    )
 
     def _compute_features(self):
         """ Compute supported features based on backend type. """

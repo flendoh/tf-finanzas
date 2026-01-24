@@ -36,3 +36,4 @@ class MarketAccount(models.Model):
         for account in self:
             if account.backend_type == 'falabella':
                 account.feature_order_document = True
+                account.feature_open_marketplace_url = True

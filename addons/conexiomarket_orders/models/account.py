@@ -65,6 +65,19 @@ class MarketAccount(models.Model):
         help="Si está activado, se creará un producto automáticamente si no se encuentra en Odoo al procesar una orden.",
         default=False
     )
+
+    # Features
+    feature_order_document = fields.Boolean(
+        string="Soporta Documentos de Orden",
+        compute="_compute_features",
+        help="Indica si este backend soporta la descarga de documentos de orden (etiquetas, facturas, etc.)"
+    )
+
+    feature_open_marketplace_url = fields.Boolean(
+        string="Soporta URL de Orden",
+        compute="_compute_features",
+        help="Indica si este backend soporta redirigir a la URL de la orden en el marketplace"
+    )
     
     @api.depends('order_webhook_token')
     def _compute_order_webhook_url(self):
@@ -107,18 +120,11 @@ class MarketAccount(models.Model):
         """ Recibe el payload y lo encola en market.webhook.entry """
         self.ensure_one()
         
-        external_id = "New Event"
-        if isinstance(payload, dict):
-            # Buscar claves comunes de ID
-            for key in ['id', 'orderId', 'order_id', 'number', 'code']:
-                if key in payload:
-                    external_id = str(payload[key])
-                    break
-        
         self.env['market.webhook.entry'].sudo().create({
             'account_id': self.id,
             'state': 'draft',
             'payload': json.dumps(payload, indent=4),
             'model_id': self.env.ref('sale.model_sale_order').id,
         })
-        _logger.info(f"Webhook encolado para cuenta {self.name} - ID: {external_id}")
+
+        _logger.info(f"Webhook encolado para cuenta {self.name}")
