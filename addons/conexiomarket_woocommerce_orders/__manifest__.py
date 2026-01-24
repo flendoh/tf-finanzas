@@ -7,6 +7,6 @@
     "depends": ["conexiomarket_orders"],
     "data": [],
     "license": "LGPL-3",
-    "application": False,
+    "application": True,
     "auto_install": False,
 }

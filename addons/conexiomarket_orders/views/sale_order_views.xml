@@ -11,7 +11,7 @@
                         <div name="marketplace_button_box">
                             <button name="action_get_marketplace_document"
                                     type="object"
-                                    class="btn-primary"
+                                    class="btn-secondary"
                                     icon="fa-file-text-o"
                                     string="Descargar Documento"
                                     invisible="not feature_order_document"
