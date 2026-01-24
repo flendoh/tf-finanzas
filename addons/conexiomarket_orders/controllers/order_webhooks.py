@@ -29,7 +29,7 @@ class OrderWebhookController(http.Controller):
             
             account.handle_create_webhook(data)
             
-            return request.make_json_response({'status': 'ok'}, status=201)
+            return request.make_json_response({'status': 'ok'}, status=200)
             
         except Exception as e:
             _logger.error('Error processing webhook for account %s: %s', account_id, str(e))
