@@ -8,17 +8,14 @@
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
                     <page name="marketplace_page" string="Detalles Marketplace" invisible="not marketplace_account_id">
-                        <div class="oe_button_box" name="marketplace_button_box">
+                        <div name="marketplace_button_box">
                             <button name="action_get_marketplace_document"
                                     type="object"
-                                    class="oe_stat_button"
+                                    class="btn-primary"
                                     icon="fa-file-text-o"
-                                    invisible="not feature_order_document">
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_text">Descargar</span>
-                                    <span class="o_stat_text">Documento</span>
-                                </div>
-                            </button>
+                                    string="Descargar Documento"
+                                    invisible="not feature_order_document"
+                            />
                         </div>
                         <field name="feature_order_document" invisible="1"/>
                         <group>

@@ -1,4 +1,5 @@
 from odoo.addons.component.core import Component
+from odoo.exceptions import UserError
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -11,13 +12,14 @@ class OrderDocumentImporter(Component):
     def run(self, order):
         """ Get document from marketplace and attach to order. """
         if not order.marketplace_external_id:
-            raise ValueError("El pedido %s no tiene ID externo" % order.name)
+            raise UserError("El pedido %s no tiene ID externo" % order.name)
+            
         adapter = self.component(usage="order.adapter")
         
         attachment_vals = adapter.get_document(order.marketplace_external_id)
         
         if not attachment_vals:
-            raise ValueError("No se encontró documento para el pedido %s", order.name)
+            raise UserError("No se encontró documento para el pedido %s" % order.name)
 
         attachment_vals.update({
             'res_model': 'sale.order',
