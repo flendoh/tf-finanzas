@@ -24,6 +24,9 @@ class SaleOrder(models.Model):
     )
     marketplace_raw_data = fields.Text(string="Raw Data", readonly=True, help="Data recibido del marketplace para esta orden", groups="conexiomarket_core.group_market_connector_manager")
 
+    # Features
+    feature_order_document = fields.Boolean(related="marketplace_account_id.feature_order_document", string="Soporte Documento", default=False, readonly=True, help="Indica si la cuenta de marketplace soporta la obtención de documentos de la orden")
+
     _sql_constraints = [
         ('marketplace_external_id_account_unique', 'UNIQUE(marketplace_account_id, marketplace_external_id)', 'El ID externo debe ser único por cuenta de marketplace')
     ]
