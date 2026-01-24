@@ -125,7 +125,7 @@ class MarketWebhookEntry(models.Model):
             try:
                 _logger.info(f"Iniciando procesamiento de webhook {entry.name} para el modelo {entry.model_id.model}")
                 with self.env.cr.savepoint():
-                    with account.work_on(entry.model_id.model) as work:
+                    with account.work_on(entry.model_id.sudo().model) as work:
                         importer = work.component(usage="importer")
                         record = importer.run(payload)
 
