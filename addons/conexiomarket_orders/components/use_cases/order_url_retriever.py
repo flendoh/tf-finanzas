@@ -5,6 +5,7 @@ _logger = logging.getLogger(__name__)
 
 class OrderUrlRetriever(Component):
     _name = "order.url.retriever"
+    _collection = "market.account"
     _usage = "url.retriever"
     _apply_on = ["sale.order"]
     

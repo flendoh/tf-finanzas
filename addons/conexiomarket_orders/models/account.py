@@ -100,6 +100,12 @@ class MarketAccount(models.Model):
         self.order_webhook_token = str(uuid.uuid4())
         return True
     
+    def _compute_features(self):
+        """ Compute supported features based on backend type. """
+        for account in self:
+            account.feature_order_document = False
+            account.feature_open_marketplace_url = False
+    
     def action_view_orders(self):
         """Abrir vista de órdenes para esta cuenta"""
         self.ensure_one()

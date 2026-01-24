@@ -1,11 +1,12 @@
 from odoo import _
-from odoo.addons.component.core import Component, AbstractComponent
+from odoo.addons.component.core import Component
 import logging
 
 _logger = logging.getLogger(__name__)
 
 class OrderImporter(Component):
     _name = "market.order.importer"
+    _collection = "market.account"
     _usage = "importer"
     _apply_on = ["sale.order"]
     

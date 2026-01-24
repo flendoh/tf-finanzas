@@ -78,11 +78,6 @@ class MarketAccount(models.Model):
         compute='_compute_event_queue_count'
     )
 
-    def _compute_features(self):
-        """ Compute supported features based on backend type. """
-        for account in self:
-            account.feature_order_document = False
-
     @api.depends('product_mapping_ids')
     def _compute_mapping_count(self):
         for account in self:
