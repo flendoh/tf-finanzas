@@ -23,7 +23,7 @@
                         <group string="Información Técnica" groups="base.group_no_one">
                             <field name="write_date" string="Fecha de Actualización"/>
                             <field name="marketplace_webhook_id" />
-                            <field name="marketplace_raw_data" widget="code" options="{'mode': 'json'}"/>
+                            <field name="marketplace_raw_data" widget="code" options="{'language': 'json'}"/>
                         </group>
                     </page>
                 </xpath>

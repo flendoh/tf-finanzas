@@ -37,7 +37,7 @@
                     </group>
                     <notebook>
                         <page string="Payload">
-                            <field name="payload" widget="code" options="{'mode': 'json'}"/>
+                            <field name="payload" widget="code" options="{'language': 'json'}"/>
                         </page>
                         <page string="Headers">
                             <field name="headers"/>
