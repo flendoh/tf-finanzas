@@ -1,5 +1,6 @@
 from odoo.addons.component.core import AbstractComponent
-
+import pytz
+from dateutil.parser import parse
 # pylint: disable=W8106
 class BaseMapper(AbstractComponent):
     """ Base Mapper for transforming data between Odoo and External Systems.
@@ -9,6 +10,17 @@ class BaseMapper(AbstractComponent):
     """
     _name = "base.market.mapper"
     _collection = "market.account"
+
+    def to_utc(self, dt):
+        return dt.astimezone(pytz.utc)
+
+    def parse_to_utc(self, date_str):
+        if not date_str:
+            return False
+        dt = parse(date_str)
+        if not dt.tzinfo:
+            dt = pytz.timezone(self.collection.company_id.partner_id.tz or 'UTC').localize(dt)
+        return self.to_utc(dt).replace(tzinfo=None)
 
     def map_record(self, record):
         """ Main method to map a record.

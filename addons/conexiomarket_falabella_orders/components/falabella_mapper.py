@@ -23,21 +23,21 @@ class FalabellaMapper(Component):
         order_info = order_data['SuccessResponse']['Body']['Orders']['Order']
         
         vals = dict(
-            marketplace_shipping_deadline=order_info.get('PromisedShippingTime'),
+            marketplace_shipping_deadline=self.parse_to_utc(order_info.get('PromisedShippingTime')),
             marketplace_external_id=order_info.get('OrderId'),
-            marketplace_date_order=order_info.get('CreatedAt'),
+            marketplace_date_order=self.parse_to_utc(order_info.get('CreatedAt')),
             marketplace_order_number=order_info.get('OrderNumber'),
             marketplace_invoice_required= str(order_info.get('InvoiceRequired', False)).lower() == 'true',
             partner_id=None,
             client_order_ref=order_info.get('OrderNumber'),
             origin=f"Falabella-{order_info.get('OrderId')}",
-            date_order=order_info.get('CreatedAt'),
+            date_order=self.parse_to_utc(order_info.get('CreatedAt')),
             state='draft',
             note=order_info.get('Remarks', ''),
             company_id=self.collection.company_id.id,
             user_id=self.collection.user_id.id,
             warehouse_id=self.collection.warehouse_id.id,
-            commitment_date=order_info.get('PromisedShippingTime'),
+            commitment_date=self.parse_to_utc(order_info.get('PromisedShippingTime')),
             marketplace_raw_data=json.dumps(order_data, indent=4),
         )
         
