@@ -87,7 +87,7 @@ class MarketWebhookEntry(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'name': 'Registro Relacionado',
-            'res_model': self.model_id.model,
+            'res_model': self.model_id.sudo().model,
             'res_id': self.res_id,
             'view_mode': 'form',
             'target': 'current',

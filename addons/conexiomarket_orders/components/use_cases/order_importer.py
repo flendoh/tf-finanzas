@@ -44,6 +44,7 @@ class OrderImporter(Component):
             self._schedule_missing_product_activity(order, missing_lines, account)
         _logger.info("Created new market order %s (ID: %s)", order.name, order.id)
         return order
+        
     def _upsert_partner(self, partner_vals: dict):
         """ Find or create partner. """
         partner = None
