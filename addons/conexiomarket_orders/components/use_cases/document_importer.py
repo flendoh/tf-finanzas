@@ -11,20 +11,17 @@ class OrderDocumentImporter(Component):
     def run(self, order):
         """ Get document from marketplace and attach to order. """
         if not order.marketplace_external_id:
-            _logger.warning("Cannot get document: Order %s has no external ID", order.name)
-            return
-
+            raise ValueError("El pedido %s no tiene ID externo" % order.name)
         adapter = self.component(usage="order.adapter")
         
         attachment_vals = adapter.get_document(order.marketplace_external_id)
         
-        if attachment_vals:
-            attachment_vals.update({
-                'res_model': 'sale.order',
-                'res_id': order.id,
-                'type': 'binary',
-            })
-            self.collection.env['ir.attachment'].create(attachment_vals)
-            _logger.info("Document attached to order %s", order.name)
-        else:
-            _logger.warning("No document found for order %s", order.name)
+        if not attachment_vals:
+            raise ValueError("No se encontró documento para el pedido %s", order.name)
+
+        attachment_vals.update({
+            'res_model': 'sale.order',
+            'res_id': order.id,
+            'type': 'binary',
+        })
+        return self.collection.env['ir.attachment'].create(attachment_vals)

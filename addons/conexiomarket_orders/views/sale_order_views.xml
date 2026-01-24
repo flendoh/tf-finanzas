@@ -13,8 +13,11 @@
                                     type="object"
                                     class="oe_stat_button"
                                     icon="fa-file-text-o"
-                                    string="Descargar Documento"
                                     invisible="not feature_order_document">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Descargar</span>
+                                    <span class="o_stat_text">Documento</span>
+                                </div>
                             </button>
                         </div>
                         <field name="feature_order_document" invisible="1"/>
