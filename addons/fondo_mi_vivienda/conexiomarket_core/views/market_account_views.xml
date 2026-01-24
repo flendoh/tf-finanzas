@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_market_account_form" model="ir.ui.view">
+            <field name="name">market.account.form</field>
+            <field name="model">market.account</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header/>
+                    <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button name="conexiomarket_core.action_market_product_mapping" 
+                                type="action" 
+                                class="oe_stat_button" 
+                                icon="fa-sitemap"
+                            >
+                                <field name="mapping_count" widget="statinfo" string="Productos"/>
+                            </button>
+                            <button name="action_view_webhooks" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-cloud-download"
+                            >
+                                <field name="webhook_count" widget="statinfo" string="Webhooks"/>
+                            </button>
+                            <button name="action_view_events" 
+                                type="object" 
+                                class="oe_stat_button" 
+                                icon="fa-cloud-upload"
+                            >
+                                <field name="event_queue_count" widget="statinfo" string="Salidas"/>
+                            </button>
+                        </div>
+                        <div class="mb32">
+                            <label class="o_form_label" for="name"/>
+                            <h1 class="oe_title">
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="company_id"/>
+                                <field name="backend_type"/>
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                            </group>
+                            <group>
+                                <field name="warehouse_id" />
+                                <field name="is_active" widget="boolean_toggle"/>  
+                            </group>
+                        </group>
+                        <notebook>
+                            <page name="credentials_page" string="Credenciales" groups="conexiomarket_core.group_market_connector_manager"/>
+                        </notebook>
+                    </sheet>
+                    <chatter>
+                        <field name="message_follower_ids" groups="base.group_user" />
+                        <field name="message_ids" />
+                    </chatter>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_market_account_list" model="ir.ui.view">
+            <field name="name">market.account.list</field>
+            <field name="model">market.account</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="user_id" widget="many2one_avatar_user"/>
+                    <field name="backend_type"/>
+                    <field name="mapping_count" />
+                    <field name="is_active" widget="boolean_toggle"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_market_accounts" model="ir.actions.act_window">
+            <field name="name">Cuentas</field>
+            <field name="res_model">market.account</field>
+            <field name="view_mode">list,form</field>
+        </record>
+    </data>
+</odoo>

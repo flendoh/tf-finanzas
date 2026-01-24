@@ -1,0 +1,15 @@
+
+# SUNAT/Electronic Invoicing
+PySimpleSOAP
+xmlsec==1.3.13
+
+# Utilities
+future
+tornado
+cachetools
+
+cryptography
+packaging
+paramiko<4.0.0
+pysftp
+boto3

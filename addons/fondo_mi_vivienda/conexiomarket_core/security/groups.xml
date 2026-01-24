@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="0">
+        <record id="module_category_market_connector" model="ir.module.category">
+            <field name="name">ConexioMarket</field>
+            <field name="description">Permisos para el conector de Marketplaces</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="group_market_connector_user" model="res.groups">
+            <field name="name">Vendedor</field>
+            <field name="category_id" ref="conexiomarket_core.module_category_market_connector"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">El usuario puede gestionar sus propias cuentas de marketplace.</field>
+        </record>
+        <record id="group_market_connector_manager" model="res.groups">
+            <field name="name">Administrador</field>
+            <field name="category_id" ref="conexiomarket_core.module_category_market_connector"/>
+            <field name="implied_ids" eval="[(4, ref('conexiomarket_core.group_market_connector_user'))]"/>
+            <field name="comment">El usuario tiene acceso completo a todas las funcionalidades del conector de marketplaces.</field>
+        </record>
+    </data>
+
+    <data>
+        <record model="ir.rule" id="market_account_company_rule">
+            <field name="name">Market Account: multi-company</field>
+            <field name="model_id" ref="model_market_account"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">
+                ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+            </field>
+        </record>
+        <record id="market_account_user_rule" model="ir.rule">
+            <field name="name">Market Account: Regla para Vendedor</field>
+            <field name="model_id" ref="model_market_account"/>
+            <field name="groups" eval="[(4, ref('group_market_connector_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+        </record>
+        <record id="market_account_manager_rule" model="ir.rule">
+            <field name="name">Market Account: Regla para Administrador</field>
+            <field name="model_id" ref="model_market_account"/>
+            <field name="groups" eval="[(4, ref('group_market_connector_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="market_product_mapping_comp_rule" model="ir.rule">
+            <field name="name">Market Product Mapping: multi-company</field>
+            <field name="model_id" ref="model_market_product_mapping"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">
+                ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+            </field>
+        </record>
+        <record id="market_product_mapping_user_rule" model="ir.rule">
+            <field name="name">Market Product Mapping: Regla para Vendedor</field>
+            <field name="model_id" ref="model_market_product_mapping"/>
+            <field name="groups" eval="[(4, ref('group_market_connector_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[('account_id.user_id', '=', user.id)]</field>
+        </record>
+        <record id="market_product_mapping_manager_rule" model="ir.rule">
+            <field name="name">Market Product Mapping: Regla para Administrador</field>
+            <field name="model_id" ref="model_market_product_mapping"/>
+            <field name="groups" eval="[(4, ref('group_market_connector_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Reglas para Webhook Entry -->
+        <record id="market_webhook_entry_comp_rule" model="ir.rule">
+            <field name="name">Market Webhook Entry: multi-company</field>
+            <field name="model_id" ref="model_market_webhook_entry"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">
+                ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+            </field>
+        </record>
+        <record id="market_webhook_entry_user_rule" model="ir.rule">
+            <field name="name">Market Webhook Entry: Regla para Vendedor</field>
+            <field name="model_id" ref="model_market_webhook_entry"/>
+            <field name="groups" eval="[(4, ref('group_market_connector_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('account_id.user_id', '=', user.id)]</field>
+        </record>
+        <record id="market_webhook_entry_manager_rule" model="ir.rule">
+            <field name="name">Market Webhook Entry: Regla para Administrador</field>
+            <field name="model_id" ref="model_market_webhook_entry"/>
+            <field name="groups" eval="[(4, ref('group_market_connector_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Reglas para Event Queue -->
+        <record id="market_event_queue_comp_rule" model="ir.rule">
+            <field name="name">Market Event Queue: multi-company</field>
+            <field name="model_id" ref="model_market_event_queue"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">
+                ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+            </field>
+        </record>
+        <record id="market_event_queue_user_rule" model="ir.rule">
+            <field name="name">Market Event Queue: Regla para Vendedor</field>
+            <field name="model_id" ref="model_market_event_queue"/>
+            <field name="groups" eval="[(4, ref('group_market_connector_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('account_id.user_id', '=', user.id)]</field>
+        </record>
+        <record id="market_event_queue_manager_rule" model="ir.rule">
+            <field name="name">Market Event Queue: Regla para Administrador</field>
+            <field name="model_id" ref="model_market_event_queue"/>
+            <field name="groups" eval="[(4, ref('group_market_connector_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+    </data>
+</odoo>

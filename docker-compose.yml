@@ -1,6 +1,6 @@
 services:
   web:
-    image: odoo:18.0
+    build: .
     depends_on:
       - db
     ports:
@@ -12,6 +12,7 @@ services:
     volumes:
       - odoo-web-data:/var/lib/odoo
       - ./addons:/mnt/extra-addons
+      - odoo-config:/etc/odoo
   db:
     image: postgres:15
     ports:
@@ -27,3 +28,4 @@ services:
 volumes:
   odoo-web-data:
   odoo-db-data:
+  odoo-config:

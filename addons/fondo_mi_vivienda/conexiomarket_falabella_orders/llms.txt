@@ -1,0 +1,22 @@
+# ConexioMarket Falabella Orders
+
+Implementación del conector de Falabella para Órdenes usando la arquitectura estándar de ConexioMarket.
+
+## Componentes
+
+### Adapter (`falabella.market.adapter`)
+- Hereda de `order.market.adapter`.
+- Implementa `create_package_order_from_webhook`.
+- Usa `order.webservice` para comunicar con API.
+
+### Mapper (`falabella.market.mapper`)
+- Hereda de `order.import.mapper`.
+- Implementa `map_record` (passthrough).
+- Métodos helpers: `map_create_order`, `map_create_order_lines`, `map_create_partner`.
+ - `map_create_order_lines` permite incluir `marketplace_external_id` solo cuando es necesario.
+
+### Webservice (`falabella.market.webservice`)
+- Maneja autenticación y firmas HMAC.
+
+### Importer (desde `market_connector_orders`)
+- La orquestación de importación se realiza en `market.order.importer.standard`.

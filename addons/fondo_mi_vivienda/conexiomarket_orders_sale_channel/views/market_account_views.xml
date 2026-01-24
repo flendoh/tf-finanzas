@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_market_account_form_inherit_orders_sale_channel" model="ir.ui.view">
+            <field name="name">market.account.view.form.inherit.orders.sale.channel</field>
+            <field name="model">market.account</field>
+            <field name="inherit_id" ref="conexiomarket_orders.view_market_account_form_inherit_market_connector_orders"/>
+            <field name="arch" type="xml">
+                <field name="team_id" position="after">
+                    <field name="sale_channel_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

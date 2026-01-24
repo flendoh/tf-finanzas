@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_market_account_form_inherit_market_connector_orders" model="ir.ui.view">
+            <field name="name">market.account.view.form.inherit.orders</field>
+            <field name="model">market.account</field>
+            <field name="inherit_id" ref="conexiomarket_core.view_market_account_form"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button name="action_view_orders" 
+                            type="object" 
+                            class="oe_stat_button" 
+                            icon="fa-link"
+                        >
+                        <field name="orders_count" widget="statinfo" string="Órdenes"/>
+                    </button>
+                </div>
+                <notebook position="inside">
+                    <page string="Órdenes" name="orders_page">
+                        <group>
+                            <group string="Configuración de Webhooks de Órdenes" groups="conexiomarket_core.group_market_connector_manager">
+                                <field name="order_webhook_enabled"/>
+                                <field name="order_created_weebhook_url" 
+                                       widget="CopyClipboardChar" 
+                                       readonly="1"
+                                        invisible="not order_webhook_enabled"/>
+                            </group>
+                            <group string="Seguridad del Webhook" invisible="not order_webhook_enabled" groups="conexiomarket_core.group_market_connector_manager">
+                                <field name="order_webhook_token" readonly="1"/>
+                                <button name="regenerate_order_webhook_token" 
+                                        string="Regenerar Token de Órdenes" 
+                                        type="object" 
+                                        class="btn-secondary"
+                                        icon="fa-refresh"/>
+                            </group>
+                            <group string="Ventas">
+                                <field name="team_id" />
+                                <field name="partner_category_id" />
+                                <field name="create_product_if_not_found" />
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+        <record id="view_market_account_tree_inherit_market_connector_orders" model="ir.ui.view">
+            <field name="name">market.account.view.list.inherit.orders</field>
+            <field name="model">market.account</field>
+            <field name="inherit_id" ref="conexiomarket_core.view_market_account_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='mapping_count']" position="after">
+                    <field name="orders_count"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

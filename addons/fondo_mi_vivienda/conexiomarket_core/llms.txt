@@ -1,0 +1,60 @@
+# Arquitectura del Núcleo de Conectores (ConexioMarket Core)
+
+Este módulo define los cimientos para construir conectores con marketplaces externos de manera escalable y mantenible. Se basa en el patrón de diseño "Component" (inspirado en OCA Connector) para separar responsabilidades.
+
+## 1. Conceptos Clave
+
+### A. Backend (`market.account`)
+Es la representación de la instancia externa (ej. "Mi Cuenta de Amazon", "Tienda Shopify").
+- **Responsabilidad**: Almacenar credenciales, configuración y servir como punto de entrada (`Collection`) para los componentes.
+- **Uso**: Todos los componentes se ejecutan en el contexto de un `market.account`.
+
+### B. Componentes
+Los componentes son clases especializadas que realizan tareas específicas. Se buscan dinámicamente según el `backend_type` (ej. 'mercadolibre', 'shopify') y el modelo de Odoo (ej. 'sale.order').
+
+#### 1. Adapter (`base.market.adapter`)
+**Responsabilidad**: Comunicación pura con la API externa.
+- **Entrada**: Parámetros de búsqueda o IDs.
+- **Salida**: Datos crudos (JSON/Dict) tal como vienen del API.
+- **Métodos Estándar**:
+  - `search(filters)`
+  - `read(external_id)`
+  - `create(data)`
+  - `write(external_id, data)`
+  - `delete(external_id)`
+- **Regla de Oro**: El Adapter NO debe saber nada de la lógica de Odoo ni de los modelos de Odoo. Solo habla "Idioma API".
+
+#### 2. Mapper (`base.market.mapper`)
+**Responsabilidad**: Transformación de datos.
+- **ImportMapper**: `Datos Externos (JSON)` -> `Datos Odoo (Dict para write/create)`.
+
+...
+
+2. **Implementar Adapter**: Crear `MercadoLibreAdapter` heredando de `base.market.adapter`.
+3. **Implementar Mappers**: Crear `MercadoLibreOrderMapper`, `MercadoLibreProductMapper`.
+4. **Implementar Importer**: Crear el use case que orquesta el flujo de importación.
+
+#### 3. Binder (`base.market.binder`)
+**Responsabilidad**: Vincular IDs externos con registros de Odoo.
+- **Entrada**: `external_id` de marketplace.
+- **Salida**: Registro Odoo asociado.
+- **Regla de Oro**: El Binder no llama APIs externas, solo resuelve relaciones.
+
+#### 4. Importadores (Use Cases)
+**Responsabilidad**: Orquestar el flujo de importación.
+- **Entrada**: Payload normalizado desde el Adapter.
+- **Salida**: Registro Odoo creado/actualizado.
+- **Regla de Oro**: La lógica de negocio va aquí, no en el Adapter.
+
+## 3. Ventajas de esta Arquitectura
+- **Desacoplamiento**: Cambiar la API externa solo afecta al Adapter. Cambiar la estructura de Odoo solo afecta al Mapper.
+- **Reusabilidad**: La lógica de sincronización se concentra en use cases.
+- **Testabilidad**: Se pueden mockear los Adapters para probar Mappers e Importers sin conexión real.
+
+## 4. Reglas de Implementación en Componentes
+- **Acceso al Entorno (Environment)**:
+  Dentro de un componente (`Adapter`, `Mapper`, `Binder`, `Importer`), NO usar `self.env` directamente, ya que puede no estar disponible o comportarse de forma inesperada.
+  Siempre acceder al entorno a través de la colección: `self.collection.env`.
+  
+  *Incorrecto*: `self.env['res.partner']`
+  *Correcto*: `self.collection.env['res.partner']`

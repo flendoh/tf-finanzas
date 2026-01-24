@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_market_account_manager,access.market.account.manager,model_market_account,conexiomarket_core.group_market_connector_manager,1,1,1,1
+access_market_account_user,access.market.account.user,model_market_account,conexiomarket_core.group_market_connector_user,1,0,0,0
+access_product_mapping_manager,access.product.mapping.manager,model_market_product_mapping,conexiomarket_core.group_market_connector_manager,1,1,1,1
+access_product_mapping_user,access.product.mapping.user,model_market_product_mapping,conexiomarket_core.group_market_connector_user,1,1,1,1
+access_market_webhook_entry_manager,market.webhook.entry.manager,model_market_webhook_entry,conexiomarket_core.group_market_connector_manager,1,1,1,0
+access_market_webhook_entry_user,market.webhook.entry.user,model_market_webhook_entry,conexiomarket_core.group_market_connector_user,1,1,1,0
+access_market_event_queue_manager,market.event.queue.manager,model_market_event_queue,conexiomarket_core.group_market_connector_manager,1,1,1,0
+access_market_event_queue_user,market.event.queue.user,model_market_event_queue,conexiomarket_core.group_market_connector_user,1,1,1,0

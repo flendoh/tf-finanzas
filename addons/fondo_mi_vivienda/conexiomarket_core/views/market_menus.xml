@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <menuitem id="market_root_menu" name="ConexioMarket" sequence="10" groups="conexiomarket_core.group_market_connector_user">
+            <menuitem id="market_accounts_menu" action="action_market_accounts" name="Cuentas" sequence="1"/>
+            
+            <menuitem id="market_monitor_menu" name="Monitor" sequence="5">
+                <menuitem id="market_webhook_entry_menu" action="action_market_webhook_entry" sequence="10"/>
+                <menuitem id="market_event_queue_menu" action="action_market_event_queue" sequence="20"/>
+            </menuitem>
+        </menuitem>
+    </data>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sequence for Webhook Entry -->
+        <record id="seq_market_webhook_entry" model="ir.sequence">
+            <field name="name">Market Webhook Entry</field>
+            <field name="code">market.webhook.entry</field>
+            <field name="prefix">WH/%(year)s/</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Sequence for Event Queue -->
+        <record id="seq_market_event_queue" model="ir.sequence">
+            <field name="name">Market Event Queue</field>
+            <field name="code">market.event.queue</field>
+            <field name="prefix">EV/%(year)s/</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

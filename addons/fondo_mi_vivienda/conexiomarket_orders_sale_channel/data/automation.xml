@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="action_assign_sale_channel_from_market" model="ir.actions.server">
+            <field name="name">Asignar Canal de Venta desde Marketplace</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">
+if record.marketplace_account_id.sale_channel_id and not record.sale_channel_id:
+    record['sale_channel_id'] = record.marketplace_account_id.sale_channel_id.id
+            </field>
+        </record>
+
+        <record id="automation_assign_sale_channel_from_market" model="base.automation">
+            <field name="name">Asignar Canal de Venta (Marketplace)</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="trigger">on_create_or_write</field>
+            <field name="trigger_field_ids" eval="[(4, ref('conexiomarket_orders.field_sale_order__marketplace_webhook_id'))]"/>
+            <field name="action_server_ids" eval="[(4, ref('action_assign_sale_channel_from_market'))]"/>
+        </record>
+    </data>
+</odoo>

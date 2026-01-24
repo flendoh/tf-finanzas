@@ -1,0 +1,62 @@
+# Implementación de Órdenes en ConexioMarket (ConexioMarket Orders)
+
+Este módulo implementa la lógica específica para la gestión de **Pedidos de Venta (Sale Orders)** utilizando la arquitectura definida en `market_connector_core`.
+
+## 1. Componentes Implementados (`components/`)
+
+La lógica se ha refactorizado para seguir el patrón Adapter-Mapper-Binder-Importer.
+
+### A. Order Importer (`components/use_cases/order_importer.py`)
+Componente: `market.order.importer.standard`
+Hereda de: `Component`
+
+Es el orquestador principal.
+- **Método Principal**: `run(payload)`.
+- **Responsabilidades**:
+  1. Llama al Adapter para normalizar el payload.
+  2. Verifica si la orden ya existe usando `OrderBinder`.
+  3. Resuelve Partner y Productos.
+  4. Crea la orden en Odoo.
+  5. Maneja productos faltantes (Actividades).
+
+### B. Order Binder (`components/binder.py`)
+Componente: `order.binder`
+Hereda de: `BaseBinder`
+
+Gestiona el enlace entre el `marketplace_external_id` y el `sale.order`.
+- **Métodos**:
+  - `to_internal(external_id)`: Busca `sale.order` por `marketplace_external_id` + `marketplace_account_id`.
+  - `to_external(id)`: Devuelve `marketplace_external_id`.
+
+### C. Order Import Mapper (`components/mapper.py`)
+Componente: `order.import.mapper`
+Hereda de: `BaseMapper`
+
+Prepara los datos para la creación de la orden.
+- **Entrada**: Package normalizado (dict).
+- **Salida**: Diccionario compatible con `sale.order.create`.
+- *Nota*: Actualmente el Adapter ya produce un "package" muy cercano a la estructura de Odoo, por lo que este mapper es ligero.
+
+### D. Order Adapter (`components/adapter.py`)
+Componente: `order.adapter`
+Hereda de: `BaseAdapter`
+
+Define la interfaz base para los adaptadores de órdenes específicos (ej. MercadoLibre, Amazon).
+- **Método Requerido**: `create_package_order_from_webhook(payload)`.
+
+## 2. Flujo de Webhook (Refactorizado)
+
+El flujo de entrada de una orden vía Webhook es:
+
+1. **Controlador** (`controllers/order_webhooks.py`): Recibe la petición HTTP.
+2. **Modelo** (`market.account.handle_create_webhook`):
+   - Instancia el `OrderAdapter` para convertir el payload crudo en un package normalizado.
+   - Instancia el `OrderImporter` y llama a `run(payload)`.
+3. **OrderImporter**:
+   - `binder.to_internal()`: ¿Existe la orden? -> Si sí, retorna existente.
+   - Resuelve Partner y Productos.
+   - `sale.order.create()`: Crea la orden.
+
+## 3. Deprecación
+
+No usar `manager.py`. La orquestación se realiza en los importers (`components/use_cases`).

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="action_process_market_webhook_entry" model="ir.actions.server">
+            <field name="name">Procesar Webhook Entry</field>
+            <field name="model_id" ref="model_market_webhook_entry"/>
+            <field name="state">code</field>
+            <field name="code">records.action_process()</field>
+        </record>
+
+        <record id="automation_process_market_webhook_entry" model="base.automation">
+            <field name="name">Procesar Webhooks al recibir</field>
+            <field name="model_id" ref="model_market_webhook_entry"/>
+            <field name="trigger">on_create</field>
+            <field name="filter_domain">[('state', '=', 'draft')]</field>
+            <field name="action_server_ids" eval="[(4, ref('conexiomarket_core.action_process_market_webhook_entry'))]"/>
+        </record>
+    </data>
+</odoo>

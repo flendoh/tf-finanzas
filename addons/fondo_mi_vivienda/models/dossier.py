@@ -318,11 +318,6 @@ class Dossier(models.Model):
 
             # Ajustar saldo según tipo de gracia
             if r.tipo_periodo_gracia == 'total' and r.periodo_gracia_meses > 0:
-                # En gracia total, los intereses se capitalizan durante el periodo de gracia
-                # Saldo futuro = Saldo actual * (1 + tasa)^periodo
-                # Nota: Usamos la tasa pura (TEM) para capitalizar intereses, no la tasa con seguros.
-                # Sin embargo, si el seguro de desgravamen también se capitaliza, se usaría la combinada.
-                # Asumiremos estándar: Solo intereses se capitalizan.
                 saldo_a_financiar = r.monto_a_financiar * ((1 + r.tem)**r.periodo_gracia_meses)
             
             # Calcular la cuota constante para el periodo restante

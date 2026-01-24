@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="mail_message_subtype_webhook_failed" model="mail.message.subtype">
+        <field name="name">Webhook Failed</field>
+        <field name="description">Webhook processing failed.</field>
+        <field name="res_model">market.webhook.entry</field>
+        <field name="default" eval="True"/>
+    </record>
+</odoo>
