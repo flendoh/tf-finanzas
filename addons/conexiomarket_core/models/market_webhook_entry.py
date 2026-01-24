@@ -121,11 +121,12 @@ class MarketWebhookEntry(models.Model):
 
             payload = json.loads(entry.payload)
             account = entry.account_id
+            model_id = entry.model_id.sudo()
 
             try:
-                _logger.info(f"Iniciando procesamiento de webhook {entry.name} para el modelo {entry.model_id.model}")
+                _logger.info(f"Iniciando procesamiento de webhook {entry.name} para el modelo {model_id.model}")
                 with self.env.cr.savepoint():
-                    with account.work_on(entry.model_id.sudo().model) as work:
+                    with account.work_on(model_id.model) as work:
                         importer = work.component(usage="importer")
                         record = importer.run(payload)
 
@@ -138,10 +139,10 @@ class MarketWebhookEntry(models.Model):
                                 })
                         
             except Exception as e:
-                _logger.exception(f"Falló procesamiento de webhook {entry.name} para el modelo {entry.model_id.model}")
+                _logger.exception(f"Falló procesamiento de webhook {entry.name} para el modelo {model_id.model}")
                 escaped_tb = tools.html_escape(traceback.format_exc()[:5000])
                 
-                post_body = f"<p>Falló procesamiento de webhook {entry.name} para el modelo {entry.model_id.model}.</p><pre>{escaped_tb}</pre>"
+                post_body = f"<p>Falló procesamiento de webhook {entry.name} para el modelo {model_id.model}.</p><pre>{escaped_tb}</pre>"
                 entry.message_post(
                     body=post_body,
                     body_is_html=True,
@@ -152,8 +153,8 @@ class MarketWebhookEntry(models.Model):
                 })
 
             else:
-                _logger.info(f"Completada procesamiento de webhook {entry.name} para el modelo {entry.model_id.model}")
-                post_body = f"<p>Procesamiento de webhook {entry.name} para el modelo {entry.model_id.model} completado con éxito.</p>"
+                _logger.info(f"Completada procesamiento de webhook {entry.name} para el modelo {model_id.model}")
+                post_body = f"<p>Procesamiento de webhook {entry.name} para el modelo {model_id.model} completado con éxito.</p>"
                 entry.message_post(body=post_body, body_is_html=True)
                 entry.write({
                     'state': 'done',
