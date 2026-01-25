@@ -15,6 +15,10 @@
                         <field name="orders_count" widget="statinfo" string="Órdenes"/>
                     </button>
                 </div>
+                <page name="features_page" position="inside">
+                    <field name="feature_order_document"/>
+                    <field name="feature_open_marketplace_url"/>
+                </page>
                 <notebook position="inside">
                     <page string="Órdenes" name="orders_page">
                         <group>

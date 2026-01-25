@@ -50,6 +50,7 @@
                         </group>
                         <notebook>
                             <page name="credentials_page" string="Credenciales" groups="conexiomarket_core.group_market_connector_manager"/>
+                            <page name="features_page" string="Características"/>
                         </notebook>
                     </sheet>
                     <chatter>
