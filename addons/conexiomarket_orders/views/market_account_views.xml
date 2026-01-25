@@ -16,8 +16,12 @@
                     </button>
                 </div>
                 <page name="features_page" position="inside">
-                    <field name="feature_order_document"/>
-                    <field name="feature_open_marketplace_url"/>
+                    <group>
+                        <group string="Órdenes">
+                            <field name="feature_order_document"/>
+                            <field name="feature_open_marketplace_url"/>
+                        </group>
+                    </group>
                 </page>
                 <notebook position="inside">
                     <page string="Órdenes" name="orders_page">
