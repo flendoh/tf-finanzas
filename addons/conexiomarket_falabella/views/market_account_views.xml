@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="view_market_account_form_inherit_market_connector_orders_falabella" model="ir.ui.view">
-            <field name="name">market.account.view.form.inherit.orders.falabella</field>
+        <record id="view_market_account_form_inherit_market_connector_falabella" model="ir.ui.view">
+            <field name="name">market.account.view.form.inherit.falabella</field>
             <field name="model">market.account</field>
             <field name="inherit_id" ref="conexiomarket_core.view_market_account_form"/>
             <field name="arch" type="xml">

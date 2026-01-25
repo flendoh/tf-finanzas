@@ -19,7 +19,7 @@
         "views/product_template_views.xml",
         "views/market_menus.xml",
     ],
-    "license": "LGPL-3",
+    "license": "OPL-1",
     "application": False,
     'auto_install': False,
     'application': False,

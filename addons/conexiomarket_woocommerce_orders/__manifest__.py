@@ -6,7 +6,7 @@
     "category": "Integration",
     "depends": ["conexiomarket_orders"],
     "data": [],
-    "license": "LGPL-3",
+    "license": "OPL-1",
     "application": True,
     "auto_install": False,
 }
