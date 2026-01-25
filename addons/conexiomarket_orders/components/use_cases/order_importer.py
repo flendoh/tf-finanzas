@@ -19,14 +19,24 @@ class OrderImporter(Component):
 
     def _import_order(self, package):
         """ Internal method to process the normalized package. """
-        external_id = package['order'].get("marketplace_external_id")
+        # Inject account defaults
+        if package.get('order'):
+            package['order'].update({
+                'company_id': self.collection.company_id.id,
+                'user_id': self.collection.user_id.id,
+                'warehouse_id': self.collection.warehouse_id.id,
+                'marketplace_account_id': self.collection.id,
+            })
+
+        external_id = package.get("external_id")
         
         binder = self.component(usage="order.binder")
         
         # 1. Check if order already exists
         existing_order = binder.to_internal(external_id)
         if existing_order:
-            raise ValueError(_("Order %s already exists as %s.") % (external_id, existing_order.name))
+            raise ValueError(_("La orden %s ya existe como %s.") % (external_id, existing_order.name))
+            
         # 2. Get Order Values
         order_vals = package.get("order") or {}
         # 3. Handle Partner
@@ -43,6 +53,11 @@ class OrderImporter(Component):
         account = self.collection
         if missing_lines and account and not account.create_product_if_not_found:
             self._schedule_missing_product_activity(order, missing_lines, account)
+        
+        # 7. Bind the order
+        if external_id:
+            binder.bind(external_id, order.id)
+            
         _logger.info("Created new market order %s (ID: %s)", order.name, order.id)
         return order
         

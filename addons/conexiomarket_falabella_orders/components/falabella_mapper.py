@@ -34,9 +34,6 @@ class FalabellaMapper(Component):
             date_order=self.parse_to_utc(order_info.get('CreatedAt')),
             state='draft',
             note=order_info.get('Remarks', ''),
-            company_id=self.collection.company_id.id,
-            user_id=self.collection.user_id.id,
-            warehouse_id=self.collection.warehouse_id.id,
             commitment_date=self.parse_to_utc(order_info.get('PromisedShippingTime')),
             marketplace_last_raw_data=json.dumps(order_data, indent=4),
         )
