@@ -7,21 +7,31 @@ _logger = logging.getLogger(__name__)
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    marketplace_account_id = fields.Many2one("market.account", string="Cuenta Marketplace", readonly=True, index=True, help="Cuenta del marketplace desde donde se originó esta orden de venta", related="marketplace_webhook_id.account_id")
+    marketplace_account_id = fields.Many2one("market.account", string="Cuenta Marketplace", readonly=True, index=True, help="Cuenta del marketplace desde donde se originó esta orden de venta")
     marketplace_external_id = fields.Char(string="ID Externo", index=True, readonly=True, help="ID único de la orden en el marketplace externo")
     marketplace_date_order = fields.Datetime(string="Fecha de Orden", readonly=True, help="Fecha y hora cuando se creó la orden en el marketplace")
     marketplace_shipping_deadline = fields.Datetime(string="Fecha Límite Envío", readonly=True, help="Fecha límite de envío establecida por el marketplace")
     marketplace_order_number = fields.Char(string="Número de Orden (N°)", readonly=True, help="Número de orden del marketplace", index=True)
     marketplace_invoice_required = fields.Boolean(string="Requiere Factura", default=False, readonly=True, help="Indica si la orden del marketplace requiere factura")
-    marketplace_webhook_id = fields.Many2one(
+    marketplace_webhook_ids = fields.One2many(
         "market.webhook.entry",
-        string="Entrada Webhook",
+        "res_id",
+        string="Entradas Webhook",
         readonly=True,
-        help="Webhook que originó esta orden",
+        help="Webhooks que originaron esta orden",
         groups="conexiomarket_core.group_market_connector_user",
-        ondelete="set null"
     )
-    marketplace_raw_data = fields.Text(string="Raw Data", readonly=True, help="Data recibido del marketplace para esta orden", groups="conexiomarket_core.group_market_connector_manager")
+    marketplace_last_raw_data = fields.Text(string="Raw Data", readonly=True, help="Data recibido del marketplace para esta orden", groups="conexiomarket_core.group_market_connector_manager")
+    
+    marketplace_last_webhook_id = fields.Many2one(
+        "market.webhook.entry",
+        string="Último Webhook",
+        compute="_compute_marketplace_last_webhook_id",
+        store=True,
+        help="Último webhook procesado para esta orden"
+    )
+
+    marketplace_webhook_count = fields.Integer(string="Cantidad Webhooks", compute="_compute_marketplace_webhook_count")
 
     # Features
     feature_order_document = fields.Boolean(related="marketplace_account_id.feature_order_document", string="Soporta Documento", default=False, readonly=True, help="Indica si la cuenta de marketplace soporta la obtención de documentos de la orden")
@@ -30,6 +40,29 @@ class SaleOrder(models.Model):
     _sql_constraints = [
         ('marketplace_external_id_account_unique', 'UNIQUE(marketplace_account_id, marketplace_external_id)', 'El ID externo debe ser único por cuenta de marketplace')
     ]
+
+    @api.depends('marketplace_webhook_ids')
+    def _compute_marketplace_last_webhook_id(self):
+        for order in self:
+            if order.marketplace_webhook_ids:
+                order.marketplace_last_webhook_id = order.marketplace_webhook_ids.sorted(lambda w: w.id, reverse=True)[:1]
+            else:
+                order.marketplace_last_webhook_id = False
+
+    @api.depends('marketplace_webhook_ids')
+    def _compute_marketplace_webhook_count(self):
+        for order in self:
+            order.marketplace_webhook_count = len(order.marketplace_webhook_ids)
+
+    def action_view_webhooks(self):
+        self.ensure_one()
+        return {
+            'name': _('Webhooks'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'market.webhook.entry',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', self.marketplace_webhook_ids.ids)],
+        }
 
     def action_get_marketplace_document(self):
         """ Action to retrieve document from marketplace """

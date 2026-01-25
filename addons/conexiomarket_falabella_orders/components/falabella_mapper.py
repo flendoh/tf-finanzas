@@ -38,7 +38,7 @@ class FalabellaMapper(Component):
             user_id=self.collection.user_id.id,
             warehouse_id=self.collection.warehouse_id.id,
             commitment_date=self.parse_to_utc(order_info.get('PromisedShippingTime')),
-            marketplace_raw_data=json.dumps(order_data, indent=4),
+            marketplace_last_raw_data=json.dumps(order_data, indent=4),
         )
         
         return vals
