@@ -8,7 +8,7 @@
                 <header>
                     <button name="action_process" string="Procesar Ahora" type="object" class="oe_highlight" invisible="state != 'draft'"/>
                     <button name="action_retry" string="Reintentar" type="object" invisible="state != 'failed'" class="oe_highlight"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,processing,done,failed"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -76,7 +76,6 @@
                 
                 <separator/>
                 <filter string="Pendiente" name="state_draft" domain="[('state', '=', 'draft')]"/>
-                <filter string="Procesando" name="state_processing" domain="[('state', '=', 'processing')]"/>
                 <filter string="Procesado" name="state_done" domain="[('state', '=', 'done')]"/>
                 <filter string="Fallido" name="state_failed" domain="[('state', '=', 'failed')]"/>
                 

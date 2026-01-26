@@ -42,7 +42,6 @@ class MarketWebhookEntry(models.Model):
     state = fields.Selection(
         [
             ("draft", "Pendiente"),
-            ("processing", "Procesando"),
             ("done", "Procesado"),
             ("failed", "Fallido"),
         ],
@@ -117,8 +116,6 @@ class MarketWebhookEntry(models.Model):
     def action_process(self):
         """ Método stub para ser extendido por los módulos de dominio """
         for entry in self:
-            entry.write({'state': 'processing'})
-
             payload = json.loads(entry.payload)
             account = entry.account_id
             model_id = entry.model_id.sudo()
