@@ -27,7 +27,9 @@ class SaleOrder(models.Model):
         "market.webhook.entry",
         string="Último Webhook",
         readonly=True,
-        help="Último webhook procesado para esta orden"
+        help="Webhook que originó esta orden",
+        groups="conexiomarket_core.group_market_connector_user",
+        ondelete="set null"
     )
 
     marketplace_webhook_count = fields.Integer(string="Cantidad Webhooks", compute="_compute_marketplace_webhook_count")
