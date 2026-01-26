@@ -19,6 +19,12 @@ class OrderImporter(Component):
 
     def _import_order(self, package):
         """ Internal method to process the normalized package. """
+
+        external_id = package['external_id']
+
+        if not external_id:
+            raise ValueError(_("El payload de la orden no contiene un ID externo válido."))
+
         # Inject account defaults
         if package.get('order'):
             package['order'].update({
@@ -27,8 +33,6 @@ class OrderImporter(Component):
                 'warehouse_id': self.collection.warehouse_id.id,
                 'marketplace_account_id': self.collection.id,
             })
-
-        external_id = package.get("external_id")
         
         binder = self.component(usage="order.binder")
         
