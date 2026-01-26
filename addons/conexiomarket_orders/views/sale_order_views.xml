@@ -11,7 +11,7 @@
                             type="object"
                             class="oe_stat_button"
                             icon="fa-bolt"
-                            invisible="not marketplace_account_id"
+                            invisible="not marketplace_account_id or marketplace_webhook_count == 0"
                             groups="conexiomarket_core.group_market_connector_user">
                         <field name="marketplace_webhook_count" widget="statinfo" string="Webhooks"/>
                     </button>
