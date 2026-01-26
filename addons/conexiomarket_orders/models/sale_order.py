@@ -26,8 +26,7 @@ class SaleOrder(models.Model):
     marketplace_last_webhook_id = fields.Many2one(
         "market.webhook.entry",
         string="Último Webhook",
-        compute="_compute_marketplace_last_webhook_id",
-        store=True,
+        readonly=True,
         help="Último webhook procesado para esta orden"
     )
 
@@ -40,14 +39,6 @@ class SaleOrder(models.Model):
     _sql_constraints = [
         ('marketplace_external_id_account_unique', 'UNIQUE(marketplace_account_id, marketplace_external_id)', 'El ID externo debe ser único por cuenta de marketplace')
     ]
-
-    @api.depends('marketplace_webhook_ids')
-    def _compute_marketplace_last_webhook_id(self):
-        for order in self:
-            if order.marketplace_webhook_ids:
-                order.marketplace_last_webhook_id = order.marketplace_webhook_ids.sorted(lambda w: w.id, reverse=True)[:1]
-            else:
-                order.marketplace_last_webhook_id = False
 
     @api.depends('marketplace_webhook_ids')
     def _compute_marketplace_webhook_count(self):

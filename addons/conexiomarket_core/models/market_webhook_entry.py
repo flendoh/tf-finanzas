@@ -133,9 +133,9 @@ class MarketWebhookEntry(models.Model):
                         if record:
                             entry.write({'res_id': record.id})
 
-                            if 'marketplace_webhook_ids' in record._fields:
+                            if 'marketplace_last_webhook_id' in record._fields:
                                 record.write({
-                                    'marketplace_webhook_ids': [(4, entry.id)]
+                                    'marketplace_last_webhook_id': entry.id
                                 })
                         
             except Exception as e:
