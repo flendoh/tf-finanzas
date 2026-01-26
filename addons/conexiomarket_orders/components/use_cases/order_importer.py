@@ -20,7 +20,7 @@ class OrderImporter(Component):
     def _import_order(self, package):
         """ Internal method to process the normalized package. """
 
-        external_id = package['external_id']
+        external_id = package.get("external_id")
 
         if not external_id:
             raise ValueError(_("El payload de la orden no contiene un ID externo válido."))
