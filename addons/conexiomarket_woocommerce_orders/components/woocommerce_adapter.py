@@ -22,7 +22,6 @@ class WooCommerceAdapter(Component):
         if not self.collection.woocommerce_url:
             raise ValueError("URL WooCommerce no configurada")
         
-        # Future: Validate API keys
         return True
 
     def create_package_order_from_webhook(self, webhook):
@@ -34,11 +33,14 @@ class WooCommerceAdapter(Component):
 
         mapper = self.component(usage="order.import.mapper")
         
+        partners_data = mapper.map_create_partner(order_data)
+        
         return dict[str, Any](
             external_id=str(external_id),
             order=mapper.map_create_order(order_data),
             lines=mapper.map_create_order_lines(order_data),
-            partner=mapper.map_create_partner(order_data)
+            partner=partners_data.get('partner'),
+            shipping=partners_data.get('shipping')
         )
     
     def get_order_url(self, external_id):

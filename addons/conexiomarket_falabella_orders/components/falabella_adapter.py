@@ -42,11 +42,14 @@ class FalabellaAdapter(Component):
         order_data = webservice.get("GetOrder", params={"OrderId": external_id}, version="2.0")
         order_items_data = webservice.get("GetOrderItems", params={"OrderId": external_id})
         
+        partners_data = mapper.map_create_partner(order_data)
+
         return dict[str, Any](
             external_id=external_id,
             order=mapper.map_create_order(order_data),
             lines=mapper.map_create_order_lines(order_items_data),
-            partner=mapper.map_create_partner(order_data)
+            partner=partners_data.get('partner'),
+            shipping=partners_data.get('shipping')
         )
     
     def get_document(self, external_id):

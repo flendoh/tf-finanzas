@@ -21,8 +21,6 @@ class WooCommerceMapper(Component):
         vals = dict(
             marketplace_external_id=str(order_data.get('id')),
             marketplace_order_number=order_data.get('number'),
-            # WooCommerce doesn't always send invoice requirement, default to False or check meta_data if needed.
-            # For now, simplistic mapping as requested.
             marketplace_invoice_required=False,
             partner_id=None,
             client_order_ref=order_data.get('number'),
@@ -58,15 +56,16 @@ class WooCommerceMapper(Component):
     def map_create_partner(self, order_data: dict[str, Any]) -> dict[str, Any]:
         """ Map the partner data to the Odoo format """
         billing = order_data.get('billing', {})
+        shipping = order_data.get('shipping', {})
         
         first_name = billing.get('first_name', '')
         last_name = billing.get('last_name', '')
         name = f"{first_name} {last_name}".strip()
         
         if not name:
-             name = f"Customer {order_data.get('customer_id')}"
+            name = f"Customer {order_data.get('customer_id')}"
 
-        vals = dict(
+        partner_vals = dict(
             name = name,
             street = billing.get('address_1'),
             street2 = billing.get('address_2'),
@@ -75,5 +74,23 @@ class WooCommerceMapper(Component):
             email = billing.get('email'),
             phone = billing.get('phone'),
         )
+
+        # --- Shipping Partner (Delivery Address) ---
+        shipping_vals = {}
+        s_first = shipping.get('first_name', '')
+        s_last = shipping.get('last_name', '')
+        s_name = f"{s_first} {s_last}".strip()
+
+        if s_name or shipping.get('address_1'):
+            shipping_vals = dict(
+                name = s_name or name,
+                street = shipping.get('address_1'),
+                street2 = shipping.get('address_2'),
+                city = shipping.get('city'),
+                zip = shipping.get('postcode'),
+            )
         
-        return vals
+        return dict(
+            partner = partner_vals,
+            shipping = shipping_vals
+        )

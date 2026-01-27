@@ -74,7 +74,10 @@ class FalabellaMapper(Component):
         """ Map the partner data to the Odoo format """
         order = order_data['SuccessResponse']['Body']['Orders']['Order']
         address_billing = order['AddressBilling']
-        vals = dict(
+        address_shipping = order.get('AddressShipping', {})
+
+        # --- Billing Partner ---
+        partner_vals = dict(
             vat = order.get('NationalRegistrationNumber'),
             name = f"{order.get('CustomerFirstName')} {order.get('CustomerLastName')}",
             street = address_billing.get('Address1'),
@@ -83,11 +86,26 @@ class FalabellaMapper(Component):
         )
 
         if address_billing.get('CustomerEmail'):
-            vals.update(
+            partner_vals.update(
                 email = address_billing.get('CustomerEmail')
             )
 
-        return vals
+        # --- Shipping Partner ---
+        shipping_vals = {}
+        if address_shipping:
+            shipping_vals = dict(
+                name = f"{address_shipping.get('FirstName', '')} {address_shipping.get('LastName', '')}".strip() or partner_vals['name'],
+                street = address_shipping.get('Address1'),
+                street2 = address_shipping.get('Address2'),
+                city = address_shipping.get('City'),
+                zip = address_shipping.get('PostCode'),
+                phone = address_shipping.get('Phone'),
+            )
+
+        return dict(
+            partner = partner_vals,
+            shipping = shipping_vals
+        )
     
     def map_document(self, document_data, external_id):
         """ Map document data to attachment values. """

@@ -48,14 +48,16 @@ class OrderImporter(Component):
         # 3. Handle Partner via Service
         partner_service = self.component(usage="order.partner.service")
         partner_vals = package.get("partner") or {}
+        delivery_vals = package.get("delivery") or {}
 
         if account.partner_category_id:
             partner_vals.update({
                 'category_id': [(4, account.partner_category_id.id)],
             })
 
-        partner = partner_service.process_partner(partner_vals)
+        partner, delivery_partner = partner_service.process_partner(partner_vals, delivery_vals)
         order_vals["partner_id"] = partner.id
+        order_vals["partner_shipping_id"] = delivery_partner.id
         
         # 4. Handle Lines via Service
         product_service = self.component(usage="order.product.service")
