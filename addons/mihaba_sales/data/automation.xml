@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!--Acción del servidor-->
+        <record id="sale_order_action_server_create_activity" model="ir.actions.server">
+            <field name="name">Crear Actividad para alistar orden</field>
+            <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">records.create_activity_for_warehouse_manager()
+            </field>
+        </record>
+
+        <!--Acción del servidor-->
+        <record id="sale_order_action_server_attach_documents" model="ir.actions.server">
+            <field name="name">Alistar documentos de la orden</field>
+            <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">records.attach_documents()
+            </field>
+        </record>
+    </data>
+</odoo>
