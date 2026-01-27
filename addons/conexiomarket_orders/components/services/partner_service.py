@@ -21,8 +21,11 @@ class OrderPartnerService(Component):
         """ Process partner based on vals. """
         partner = None
         vat = partner_vals.get("vat")
+        email = partner_vals.get("email")
         if vat:
             partner = self.collection.env['res.partner'].search([('vat', '=', vat)], limit=1)
+        elif email:
+            partner = self.collection.env['res.partner'].search([('email', '=', email)], limit=1)
         
         if not partner:
             create_vals = partner_vals.copy()
