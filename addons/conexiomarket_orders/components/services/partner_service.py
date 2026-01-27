@@ -9,6 +9,13 @@ class OrderPartnerService(Component):
     _collection = "market.account"
     _usage = "order.partner.service"
     _apply_on = ["sale.order"]
+
+    def _apply_company_specific_values(self, partner_vals: dict):
+        """
+        Hook method to apply company/country specific values to partner creation.
+        Override this method in other modules to add custom logic.
+        """
+        pass
     
     def process_partner(self, partner_vals: dict, shipping_vals: dict = None):
         """ Process partner based on vals. """
@@ -19,6 +26,8 @@ class OrderPartnerService(Component):
         
         if not partner:
             create_vals = partner_vals.copy()
+
+            self._apply_company_specific_values(create_vals)
 
             partner = self.collection.env['res.partner'].create(create_vals)
         
@@ -42,6 +51,9 @@ class OrderPartnerService(Component):
                 delivery_create_vals = shipping_vals.copy()
                 delivery_create_vals['parent_id'] = partner.id
                 delivery_create_vals['type'] = 'delivery'
+
+                self._apply_company_specific_values(delivery_create_vals)
+
                 shipping_partner = self.collection.env['res.partner'].create(delivery_create_vals)
                     
         return partner, shipping_partner
