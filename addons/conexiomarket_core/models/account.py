@@ -2,6 +2,7 @@ from contextlib import contextmanager
 from odoo import models, fields, api, tools
 import logging
 import traceback
+import pytz
 
 _logger = logging.getLogger(__name__)
 
@@ -22,6 +23,12 @@ class MarketAccount(models.Model):
         help="Empresa específica para esta configuración.",
         required=True,
         default=lambda self: self.env.company
+    )
+    tz = fields.Selection(
+        '_tz_get',
+        string='Zona Horaria',
+        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
+        help="Zona horaria utilizada para procesar fechas de esta cuenta."
     )
     backend_type = fields.Selection(
         selection=[],
@@ -77,6 +84,10 @@ class MarketAccount(models.Model):
         string='Eventos Salientes',
         compute='_compute_event_queue_count'
     )
+
+    @api.model
+    def _tz_get(self):
+        return [(tz, tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
 
     @api.depends('product_mapping_ids')
     def _compute_mapping_count(self):

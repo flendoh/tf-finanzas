@@ -19,7 +19,8 @@ class BaseMapper(AbstractComponent):
             return False
         dt = parse(date_str)
         if not dt.tzinfo:
-            dt = pytz.timezone(self.collection.company_id.partner_id.tz or 'UTC').localize(dt)
+            timezone = self.collection.tz or 'UTC'
+            dt = pytz.timezone(timezone).localize(dt)
         return self.to_utc(dt).replace(tzinfo=None)
 
     def map_record(self, record):
