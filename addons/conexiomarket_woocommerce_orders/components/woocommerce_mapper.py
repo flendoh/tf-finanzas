@@ -27,7 +27,7 @@ class WooCommerceMapper(Component):
             origin=f"WooCommerce-{order_data.get('id')}",
             state='draft',
             note=order_data.get('customer_note', ''),
-            marketplace_raw_data=json.dumps(order_data, indent=4),
+            marketplace_last_raw_data=json.dumps(order_data, indent=4),
         )
         
         return vals
