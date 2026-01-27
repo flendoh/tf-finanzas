@@ -33,6 +33,7 @@
                         <group>
                             <field name="create_date"/>
                             <field name="retry_count"/>
+                            <field name="last_error" decoration-danger="1" invisible="not last_error"/>
                         </group>
                     </group>
                     <notebook>

@@ -51,6 +51,11 @@ class MarketWebhookEntry(models.Model):
         index=True,
         tracking=True
     )
+    last_error = fields.Char(
+        string="Último Error",
+        readonly=True,
+        help="Detalle del último error ocurrido durante el procesamiento"
+    )
     payload = fields.Text(
         string="Payload (JSON)",
         required=True,
@@ -59,6 +64,7 @@ class MarketWebhookEntry(models.Model):
     headers = fields.Text(
         string="Headers",
         help="Cabeceras HTTP de la petición"
+        groups="conexiomarket_core.group_market_connector_manager"
     )
     model_id = fields.Many2one(
         "ir.model",
@@ -110,7 +116,8 @@ class MarketWebhookEntry(models.Model):
         for entry in self:
             entry.write({
                 'state': 'draft',
-                'retry_count': entry.retry_count + 1
+                'retry_count': entry.retry_count + 1,
+                'last_error': False
             })
 
     def action_process(self):
@@ -147,6 +154,7 @@ class MarketWebhookEntry(models.Model):
                 )
                 entry.write({
                     'state': 'failed',
+                    'last_error': str(e)
                 })
 
             else:

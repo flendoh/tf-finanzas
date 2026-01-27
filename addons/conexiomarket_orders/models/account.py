@@ -122,7 +122,7 @@ class MarketAccount(models.Model):
             'help': 'Órdenes de venta obtenidas automáticamente del marketplace. No se pueden crear manualmente.'
         }
     
-    def handle_create_webhook(self, payload):
+    def handle_create_webhook(self, payload, headers=None):
         """ Recibe el payload y lo encola en market.webhook.entry """
         self.ensure_one()
         
@@ -131,6 +131,7 @@ class MarketAccount(models.Model):
             'state': 'draft',
             'payload': json.dumps(payload, indent=4),
             'model_id': self.env.ref('sale.model_sale_order').id,
+            'headers': json.dumps(headers, indent=4) if headers else False,
         })
 
         _logger.info(f"Webhook encolado para cuenta {self.name}")

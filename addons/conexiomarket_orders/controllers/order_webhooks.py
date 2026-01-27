@@ -26,8 +26,9 @@ class OrderWebhookController(http.Controller):
             
 
             data = request.httprequest.get_json(silent=True) or {}
+            headers = dict(request.httprequest.headers)
             
-            account.handle_create_webhook(data)
+            account.handle_create_webhook(data, headers=headers)
             
             return request.make_json_response({'status': 'ok'}, status=200)
             
