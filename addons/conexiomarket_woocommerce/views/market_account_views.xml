@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_market_account_form_inherit_market_connector_woocommerce" model="ir.ui.view">
+            <field name="name">market.account.view.form.inherit.woocommerce</field>
+            <field name="model">market.account</field>
+            <field name="inherit_id" ref="conexiomarket_core.view_market_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='credentials_page']" position="inside">
+                    <group invisible="backend_type != 'woocommerce'">
+                        <field name="woocommerce_url" required="backend_type == 'woocommerce'"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

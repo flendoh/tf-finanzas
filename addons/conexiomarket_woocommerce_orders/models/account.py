@@ -1,6 +1,11 @@
-from odoo import models, fields
+from odoo import models
 
 class MarketAccount(models.Model):
     _inherit = 'market.account'
 
-    backend_type = fields.Selection(selection_add=[('woocommerce', 'WooCommerce')], ondelete={'woocommerce': 'cascade'})
+    def _compute_features(self):
+        super()._compute_features()
+        for account in self:
+            if account.backend_type == 'woocommerce':
+                account.feature_order_document = False
+                account.feature_open_marketplace_url = True

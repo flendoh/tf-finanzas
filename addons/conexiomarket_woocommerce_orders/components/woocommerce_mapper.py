@@ -29,9 +29,6 @@ class WooCommerceMapper(Component):
             origin=f"WooCommerce-{order_data.get('id')}",
             state='draft',
             note=order_data.get('customer_note', ''),
-            company_id=self.collection.company_id.id,
-            user_id=self.collection.user_id.id,
-            warehouse_id=self.collection.warehouse_id.id,
             marketplace_raw_data=json.dumps(order_data, indent=4),
         )
         
@@ -77,7 +74,6 @@ class WooCommerceMapper(Component):
             zip = billing.get('postcode'),
             email = billing.get('email'),
             phone = billing.get('phone'),
-            is_company = False
         )
         
         return vals
