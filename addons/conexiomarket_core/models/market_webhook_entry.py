@@ -63,7 +63,7 @@ class MarketWebhookEntry(models.Model):
     )
     headers = fields.Text(
         string="Headers",
-        help="Cabeceras HTTP de la petición"
+        help="Cabeceras HTTP de la petición",
         groups="conexiomarket_core.group_market_connector_manager"
     )
     model_id = fields.Many2one(
