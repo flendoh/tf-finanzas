@@ -41,7 +41,7 @@
                             <field name="payload" widget="code" options="{'language': 'json'}"/>
                         </page>
                         <page string="Headers">
-                            <field name="headers"/>
+                            <field name="headers" widget="code" options="{'language': 'json'}"/>
                         </page>
                     </notebook>
                 </sheet>
