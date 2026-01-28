@@ -12,7 +12,7 @@ class MihabaWooCommerceMapper(Component):
         
         utm_source_val = self._get_meta_value(meta_data, '_wc_order_attribution_utm_source')
         utm_medium_val = self._get_meta_value(meta_data, '_wc_order_attribution_utm_medium')
-        invoice_required = self._get_meta_value(meta_data, '_billing_tipo_de_comprobante_') == 'Si'
+        invoice_required = self._get_meta_value(meta_data, '_billing_tipo_de_comprobante_')
 
         if utm_source_val:
             if isinstance(utm_source_val, str):
@@ -36,7 +36,7 @@ class MihabaWooCommerceMapper(Component):
                 
                 vals.update({'medium_id': medium.id})
         
-        if invoice_required:
+        if invoice_required and isinstance(invoice_required, str) and invoice_required.strip() == 'Si':
             vals.update({'marketplace_invoice_required': True})
         
         return vals
@@ -53,7 +53,7 @@ class MihabaWooCommerceMapper(Component):
                 vat = vat.strip()
             
             if vat:
-                vals.update({'partner':{'vat': vat}})
+                vals['partner']['vat'] = vat
                 
         return vals
 
