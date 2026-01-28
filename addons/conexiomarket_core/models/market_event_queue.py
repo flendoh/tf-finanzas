@@ -41,7 +41,6 @@ class MarketEventQueue(models.Model):
     state = fields.Selection(
         [
             ("pending", "Pendiente"),
-            ("processing", "En Proceso"),
             ("done", "Enviado"),
             ("failed", "Fallido"),
         ],
@@ -53,7 +52,7 @@ class MarketEventQueue(models.Model):
     )
     model_id = fields.Many2one(
         "ir.model",
-        string="Modelo Odoo",
+        string="Modelo Destino",
         required=True,
         ondelete="cascade"
     )
@@ -61,10 +60,6 @@ class MarketEventQueue(models.Model):
         string="ID Registro",
         required=True,
         index=True
-    )
-    record_ref = fields.Char(
-        string="Referencia Registro",
-        compute="_compute_record_ref"
     )
     event_type = fields.Selection(
         [
@@ -86,9 +81,6 @@ class MarketEventQueue(models.Model):
         string="Datos a Enviar",
         help="JSON pre-calculado (opcional)"
     )
-    log_notes = fields.Text(
-        string="Logs de Salida"
-    )
     retry_count = fields.Integer(
         string="Reintentos",
         default=0
@@ -102,25 +94,14 @@ class MarketEventQueue(models.Model):
         
         records = super().create(vals_list)
 
-        subtype_ids = [self.env.ref('mail.mt_comment').id, self.env.ref('mail.mt_note').id]
-
         for record in records:
-            user_id = record.account_id.user_id
-            if user_id and user_id.partner_id:
-                record.message_subscribe(partner_ids=[user_id.partner_id.id], subtype_ids=subtype_ids)
+            if record.account_id and record.account_id.message_partner_ids:
+                record.message_subscribe(partner_ids=record.account_id.message_partner_ids.ids)
 
         return records
 
-    def _compute_record_ref(self):
-        for rec in self:
-            if rec.model_id and rec.res_id:
-                record = self.env[rec.model_id.model].browse(rec.res_id)
-                rec.record_ref = record.display_name if record.exists() else f"Eliminado ({rec.res_id})"
-            else:
-                rec.record_ref = False
-
     def action_retry(self):
-        self.write({'state': 'pending', 'log_notes': False})
+        self.write({'state': 'pending'})
 
     def action_process(self):
         """ Método stub para ser extendido """
