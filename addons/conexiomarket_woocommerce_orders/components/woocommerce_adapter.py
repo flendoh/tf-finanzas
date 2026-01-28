@@ -36,7 +36,7 @@ class WooCommerceAdapter(Component):
         partners_data = mapper.map_create_partner(order_data)
         
         return dict[str, Any](
-            external_id=str(external_id),
+            external_id=str(external_id) if external_id else None,
             order=mapper.map_create_order(order_data),
             lines=mapper.map_create_order_lines(order_data),
             partner=partners_data.get('partner'),

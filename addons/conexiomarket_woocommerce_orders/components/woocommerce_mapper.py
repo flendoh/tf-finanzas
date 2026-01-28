@@ -19,7 +19,6 @@ class WooCommerceMapper(Component):
         """ Map the order data to the Odoo format """
         
         vals = dict(
-            marketplace_external_id=str(order_data.get('id')),
             marketplace_order_number=order_data.get('number'),
             marketplace_date_order=order_data.get('date_created'),
             marketplace_invoice_required=False,

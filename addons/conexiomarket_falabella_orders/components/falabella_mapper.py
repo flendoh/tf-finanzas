@@ -24,7 +24,6 @@ class FalabellaMapper(Component):
         
         vals = dict(
             marketplace_shipping_deadline=self.parse_to_utc(order_info.get('PromisedShippingTime')),
-            marketplace_external_id=order_info.get('OrderId'),
             marketplace_date_order=self.parse_to_utc(order_info.get('CreatedAt')),
             marketplace_order_number=order_info.get('OrderNumber'),
             marketplace_invoice_required= str(order_info.get('InvoiceRequired', False)).lower() == 'true',
