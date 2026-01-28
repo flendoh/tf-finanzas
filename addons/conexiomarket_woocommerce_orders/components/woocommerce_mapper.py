@@ -27,7 +27,7 @@ class WooCommerceMapper(Component):
             client_order_ref=order_data.get('number'),
             origin=f"WooCommerce-{order_data.get('id')}",
             state='draft',
-            note=order_data.get('customer_note', ''),
+            marketplace_order_note=order_data.get('customer_note', ''),
             marketplace_payment_method=order_data.get('payment_method_title', order_data.get('payment_method')),
             marketplace_last_raw_data=json.dumps(order_data, indent=4),
         )

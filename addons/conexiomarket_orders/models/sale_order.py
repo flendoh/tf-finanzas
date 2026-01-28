@@ -37,6 +37,12 @@ class SaleOrder(models.Model):
         readonly=True,
         help="Método de pago utilizado en el marketplace (ej. Webpay, Tarjeta de Crédito)"
     )
+    
+    marketplace_order_note = fields.Text(
+        string="Notas de la Orden",
+        readonly=True,
+        help="Notas o comentarios asociados a la orden en el marketplace"
+    )
 
     marketplace_webhook_count = fields.Integer(string="Cantidad Webhooks", compute="_compute_marketplace_webhook_count")
 

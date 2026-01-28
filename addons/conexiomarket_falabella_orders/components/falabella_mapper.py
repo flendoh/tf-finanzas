@@ -30,7 +30,7 @@ class FalabellaMapper(Component):
             marketplace_invoice_required= str(order_info.get('InvoiceRequired', False)).lower() == 'true',
             client_order_ref=order_info.get('OrderNumber'),
             origin=f"Falabella-{order_info.get('OrderId')}",
-            note=order_info.get('Remarks', ''),
+            marketplace_order_note=order_info.get('Remarks', ''),
             marketplace_payment_method=order_info.get('PaymentMethod'),
             commitment_date=self.parse_to_utc(order_info.get('PromisedShippingTime')),
             marketplace_last_raw_data=json.dumps(order_data, indent=4),

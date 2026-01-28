@@ -32,9 +32,10 @@
                             <group string="Información Principal">
                                 <field name="marketplace_account_id" />
                                 <field name="marketplace_order_number" invisible="not marketplace_order_number"/>
-                                <button name="action_open_marketplace_url" type="object" class="btn btn-link ps-0 pt-0 pb-2" icon="oi-arrow-right" string="Ver Orden en Marketplace" colspan="2" invisible="not feature_open_marketplace_url"/>
+                                <button name="action_open_marketplace_url" type="object" class="btn btn-link ps-0 pt-0 pb-2" icon="oi-arrow-right" string="Ver Orden en Marketplace" colspan="2" invisible="not feature_open_marketplace_url" groups="conexiomarket_core.group_market_connector_user"/>
                                 <field name="marketplace_invoice_required" widget="boolean_toggle"/>
                                 <field name="marketplace_payment_method" invisible="not marketplace_payment_method"/>
+                                <field name="marketplace_order_note" invisible="not marketplace_order_note"/>
                                 <field name="marketplace_external_id" invisible="not marketplace_external_id"/>
                             </group>
                             <group string="Fechas Importantes">
