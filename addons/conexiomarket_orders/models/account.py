@@ -35,7 +35,7 @@ class MarketAccount(models.Model):
         compute='_compute_order_webhook_url',
         readonly=True,
         store=False,
-        groups="conexiomarket_core.group_market_connector_manager"
+        groups="conexiomarket_core.group_market_connector_admin"
     )
     
     order_webhook_token = fields.Char(
@@ -44,14 +44,13 @@ class MarketAccount(models.Model):
         default=lambda self: str(uuid.uuid4()),
         readonly=True,
         required=True,
-        groups="conexiomarket_core.group_market_connector_manager"
+        groups="conexiomarket_core.group_market_connector_admin"
     )
     
     order_webhook_enabled = fields.Boolean(
         string="Habilitar Webhook de Órdenes",
         help="Activa o desactiva la recepción automática de notificaciones de órdenes del marketplace",
         default=False,
-        
     )
     
     partner_category_id = fields.Many2one(

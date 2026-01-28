@@ -23,17 +23,17 @@
                         </group>
                     </group>
                 </page>
-                <notebook position="inside">
+                <xpath expr="//page[@name='features_page']" position="before">
                     <page string="Órdenes" name="orders_page" sequence="20">
                         <group>
-                            <group string="Configuración de Webhooks de Órdenes" groups="conexiomarket_core.group_market_connector_manager">
+                            <group string="Configuración de Webhooks de Órdenes" groups="conexiomarket_core.group_market_connector_admin">
                                 <field name="order_webhook_enabled"/>
                                 <field name="order_created_weebhook_url" 
                                        widget="CopyClipboardChar" 
                                        readonly="1"
                                         invisible="not order_webhook_enabled"/>
                             </group>
-                            <group string="Seguridad del Webhook" invisible="not order_webhook_enabled" groups="conexiomarket_core.group_market_connector_manager">
+                            <group string="Seguridad del Webhook" invisible="not order_webhook_enabled" groups="conexiomarket_core.group_market_connector_admin">
                                 <field name="order_webhook_token" readonly="1"/>
                                 <button name="regenerate_order_webhook_token" 
                                         string="Regenerar Token de Órdenes" 
@@ -48,7 +48,7 @@
                             </group>
                         </group>
                     </page>
-                </notebook>
+                </xpath>
             </field>
         </record>
 
