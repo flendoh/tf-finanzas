@@ -10,23 +10,23 @@ class MarketAccount(models.Model):
         help="URL base de la API de Falabella",
         readonly=True,
         default="https://sellercenter-api.falabella.com/",
-        groups="conexiomarket_core.group_market_connector_manager"
+        groups="conexiomarket_core.group_market_connector_admin"
     )
 
     falabella_api_key = fields.Char(
         string="Clave API Falabella",
         help="Clave API para autenticación en la API de Falabella",
-        groups="conexiomarket_core.group_market_connector_manager"
+        groups="conexiomarket_core.group_market_connector_admin"
     )
 
     falabella_user_id = fields.Char(
         string="ID de Usuario Falabella",
         help="ID de usuario para autenticación en la API de Falabella",
-        groups="conexiomarket_core.group_market_connector_manager"
+        groups="conexiomarket_core.group_market_connector_admin"
     )
 
     falabella_seller_id = fields.Char(
         string="ID de Vendedor Falabella",
         help="ID de vendedor para autenticación en la API de Falabella",
-        groups="conexiomarket_core.group_market_connector_manager"
+        groups="conexiomarket_core.group_market_connector_admin"
     )

@@ -7,16 +7,24 @@
             <field name="sequence">20</field>
         </record>
         <record id="group_market_connector_user" model="res.groups">
-            <field name="name">Vendedor</field>
+            <field name="name">Usuario</field>
             <field name="category_id" ref="conexiomarket_core.module_category_market_connector"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="comment">El usuario puede gestionar sus propias cuentas de marketplace.</field>
         </record>
+        
         <record id="group_market_connector_manager" model="res.groups">
-            <field name="name">Administrador</field>
+            <field name="name">Manager</field>
             <field name="category_id" ref="conexiomarket_core.module_category_market_connector"/>
             <field name="implied_ids" eval="[(4, ref('conexiomarket_core.group_market_connector_user'))]"/>
-            <field name="comment">El usuario tiene acceso completo a todas las funcionalidades del conector de marketplaces.</field>
+            <field name="comment">El usuario tiene acceso a todas las funcionalidades excepto credenciales sensibles.</field>
+        </record>
+
+        <record id="group_market_connector_admin" model="res.groups">
+            <field name="name">Administrador</field>
+            <field name="category_id" ref="conexiomarket_core.module_category_market_connector"/>
+            <field name="implied_ids" eval="[(4, ref('conexiomarket_core.group_market_connector_manager'))]"/>
+            <field name="comment">El usuario tiene acceso completo, incluyendo gestión de credenciales.</field>
         </record>
     </data>
 
@@ -30,7 +38,7 @@
             </field>
         </record>
         <record id="market_account_user_rule" model="ir.rule">
-            <field name="name">Market Account: Regla para Vendedor</field>
+            <field name="name">Market Account: Regla para Usuario</field>
             <field name="model_id" ref="model_market_account"/>
             <field name="groups" eval="[(4, ref('group_market_connector_user'))]"/>
             <field name="perm_read" eval="True"/>
@@ -40,7 +48,7 @@
             <field name="domain_force">[('user_id', '=', user.id)]</field>
         </record>
         <record id="market_account_manager_rule" model="ir.rule">
-            <field name="name">Market Account: Regla para Administrador</field>
+            <field name="name">Market Account: Regla para Manager</field>
             <field name="model_id" ref="model_market_account"/>
             <field name="groups" eval="[(4, ref('group_market_connector_manager'))]"/>
             <field name="perm_read" eval="True"/>
@@ -59,7 +67,7 @@
             </field>
         </record>
         <record id="market_product_mapping_user_rule" model="ir.rule">
-            <field name="name">Market Product Mapping: Regla para Vendedor</field>
+            <field name="name">Market Product Mapping: Regla para Usuario</field>
             <field name="model_id" ref="model_market_product_mapping"/>
             <field name="groups" eval="[(4, ref('group_market_connector_user'))]"/>
             <field name="perm_read" eval="True"/>
@@ -69,7 +77,7 @@
             <field name="domain_force">[('account_id.user_id', '=', user.id)]</field>
         </record>
         <record id="market_product_mapping_manager_rule" model="ir.rule">
-            <field name="name">Market Product Mapping: Regla para Administrador</field>
+            <field name="name">Market Product Mapping: Regla para Manager</field>
             <field name="model_id" ref="model_market_product_mapping"/>
             <field name="groups" eval="[(4, ref('group_market_connector_manager'))]"/>
             <field name="perm_read" eval="True"/>
@@ -89,7 +97,7 @@
             </field>
         </record>
         <record id="market_webhook_entry_user_rule" model="ir.rule">
-            <field name="name">Market Webhook Entry: Regla para Vendedor</field>
+            <field name="name">Market Webhook Entry: Regla para Usuario</field>
             <field name="model_id" ref="model_market_webhook_entry"/>
             <field name="groups" eval="[(4, ref('group_market_connector_user'))]"/>
             <field name="perm_read" eval="True"/>
@@ -99,7 +107,7 @@
             <field name="domain_force">[('account_id.user_id', '=', user.id)]</field>
         </record>
         <record id="market_webhook_entry_manager_rule" model="ir.rule">
-            <field name="name">Market Webhook Entry: Regla para Administrador</field>
+            <field name="name">Market Webhook Entry: Regla para Manager</field>
             <field name="model_id" ref="model_market_webhook_entry"/>
             <field name="groups" eval="[(4, ref('group_market_connector_manager'))]"/>
             <field name="perm_read" eval="True"/>
@@ -119,7 +127,7 @@
             </field>
         </record>
         <record id="market_event_queue_user_rule" model="ir.rule">
-            <field name="name">Market Event Queue: Regla para Vendedor</field>
+            <field name="name">Market Event Queue: Regla para Usuario</field>
             <field name="model_id" ref="model_market_event_queue"/>
             <field name="groups" eval="[(4, ref('group_market_connector_user'))]"/>
             <field name="perm_read" eval="True"/>
@@ -129,7 +137,7 @@
             <field name="domain_force">[('account_id.user_id', '=', user.id)]</field>
         </record>
         <record id="market_event_queue_manager_rule" model="ir.rule">
-            <field name="name">Market Event Queue: Regla para Administrador</field>
+            <field name="name">Market Event Queue: Regla para Manager</field>
             <field name="model_id" ref="model_market_event_queue"/>
             <field name="groups" eval="[(4, ref('group_market_connector_manager'))]"/>
             <field name="perm_read" eval="True"/>

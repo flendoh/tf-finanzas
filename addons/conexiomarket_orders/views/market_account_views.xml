@@ -24,7 +24,7 @@
                     </group>
                 </page>
                 <notebook position="inside">
-                    <page string="Órdenes" name="orders_page">
+                    <page string="Órdenes" name="orders_page" sequence="20">
                         <group>
                             <group string="Configuración de Webhooks de Órdenes" groups="conexiomarket_core.group_market_connector_manager">
                                 <field name="order_webhook_enabled"/>

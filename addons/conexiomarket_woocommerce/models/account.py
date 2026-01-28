@@ -8,5 +8,5 @@ class MarketAccount(models.Model):
     woocommerce_url = fields.Char(
         string="URL WooCommerce",
         help="URL de la tienda WooCommerce",
-        groups="conexiomarket_core.group_market_connector_manager"
+        groups="conexiomarket_core.group_market_connector_admin"
     )
