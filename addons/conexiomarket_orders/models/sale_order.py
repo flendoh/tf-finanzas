@@ -33,7 +33,7 @@ class SaleOrder(models.Model):
     )
     
     marketplace_payment_method = fields.Char(
-        string="Método de Pago Marketplace",
+        string="Método de Pago",
         readonly=True,
         help="Método de pago utilizado en el marketplace (ej. Webpay, Tarjeta de Crédito)"
     )

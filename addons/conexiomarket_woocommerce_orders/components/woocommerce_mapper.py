@@ -18,11 +18,14 @@ class WooCommerceMapper(Component):
     def map_create_order(self, order_data: dict[str, Any]) -> dict[str, Any]:
         """ Map the order data to the Odoo format """
         
+        date_created = order_data.get('date_created')
+        if date_created:
+            date_created = date_created.replace('T', ' ')
+
         vals = dict(
             marketplace_order_number=order_data.get('number'),
-            marketplace_date_order=order_data.get('date_created'),
+            marketplace_date_order=self.parse_to_utc(date_created),
             marketplace_invoice_required=False,
-            partner_id=None,
             client_order_ref=order_data.get('number'),
             origin=f"WooCommerce-{order_data.get('id')}",
             state='draft',
