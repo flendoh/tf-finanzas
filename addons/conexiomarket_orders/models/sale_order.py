@@ -31,6 +31,12 @@ class SaleOrder(models.Model):
         groups="conexiomarket_core.group_market_connector_user",
         ondelete="set null"
     )
+    
+    marketplace_payment_method = fields.Char(
+        string="Método de Pago Marketplace",
+        readonly=True,
+        help="Método de pago utilizado en el marketplace (ej. Webpay, Tarjeta de Crédito)"
+    )
 
     marketplace_webhook_count = fields.Integer(string="Cantidad Webhooks", compute="_compute_marketplace_webhook_count")
 

@@ -124,7 +124,7 @@ class SaleOrder(models.Model):
                 f"Orden: {order_name}",
                 f"Cliente: {order.partner_id.name}",
                 f"Fecha Límite Envío: {deadline_str}",
-                f"Camal de venta: {sale_channel}",
+                f"Canal de venta: {sale_channel}",
             ]
                 
             order.activity_schedule('mail.mail_activity_data_todo', user_id=assignee.id, summary=summary, note="<br>".join(details))
