@@ -115,16 +115,16 @@ class SaleOrder(models.Model):
 
             assignee = order.company_id.warehouse_manager_id or order.user_id
             order_name = order.marketplace_order_number or order.name
-            deadline = order.marketplace_shipping_deadline or order.commitment_date
-            deadline_str = deadline.strftime('%Y-%m-%d %H:%M') if deadline else '-'
+            commitment_date = order.marketplace_shipping_deadline or order.commitment_date
+            commitment_date_str = commitment_date.strftime('%Y-%m-%d %H:%M') if commitment_date else '-'
             sale_channel = order.sale_channel_id.name if order.sale_channel_id else '-'
             summary = f"Nueva orden por alistar: {order_name}"
             
             details = [
                 f"Orden: {order_name}",
                 f"Cliente: {order.partner_id.name}",
-                f"Fecha Límite Envío: {deadline_str}",
+                f"Fecha de Envío: {commitment_date_str}",
                 f"Canal de venta: {sale_channel}",
             ]
                 
-            order.activity_schedule('mail.mail_activity_data_todo', user_id=assignee.id, summary=summary, note="<br>".join(details))
+            order.activity_schedule('mail.mail_activity_data_todo', user_id=assignee.id, summary=summary, note="<br>".join(details), date_deadline=commitment_date)
