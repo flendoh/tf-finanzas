@@ -91,7 +91,6 @@ class FalabellaMapper(Component):
         shipping_vals = {}
         if address_shipping:
             shipping_vals = dict(
-                name = f"{address_shipping.get('FirstName', '')} {address_shipping.get('LastName', '')}".strip() or partner_vals['name'],
                 street = address_shipping.get('Address1'),
                 street2 = address_shipping.get('Address2'),
                 city = address_shipping.get('City'),

@@ -81,13 +81,9 @@ class WooCommerceMapper(Component):
 
         # --- Shipping Partner (Delivery Address) ---
         shipping_vals = {}
-        s_first = shipping.get('first_name', '')
-        s_last = shipping.get('last_name', '')
-        s_name = f"{s_first} {s_last}".strip()
 
-        if s_name or shipping.get('address_1'):
+        if shipping.get('address_1'):
             shipping_vals = dict(
-                name = s_name or name,
                 street = shipping.get('address_1'),
                 street2 = shipping.get('address_2'),
                 city = shipping.get('city'),
