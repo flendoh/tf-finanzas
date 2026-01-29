@@ -6,8 +6,8 @@
         Base module for Falabella integration.
         Contains credentials and general configuration.
     """,
-    'category': 'Connector',
-    'author': 'Conexio Market',
+    'category': 'Integration',
+    'author': 'mhallasi',
     'depends': ['conexiomarket_core'],
     'data': [
         'views/market_account_views.xml',
